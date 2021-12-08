@@ -3,33 +3,40 @@ using System.Collections.Generic;
 using UnityEngine;
 using MidiPlayerTK;
 
-
 public class MidiReader : MonoBehaviour
 {
-
     /// <summary>
     /// Reads in real time MIDI infos sent by all MIDI controllers
-    /// Sends the information to the selected MIDI output
-    /// /!\ LATENCY PROBLEMS WITH INTEGRATED OUTPUT : NEED TO CHECK WITH SYLHPYO LINK
     /// </summary>
-
-
+    /// 
     public int indexOutput;
+    public bool playMode;
 
     void Start()
     {
         MidiKeyboard.MPTK_Init();
-        MidiKeyboard.MPTK_OpenOut(indexOutput);
         MidiKeyboard.MPTK_OpenAllInp();
-
-        MidiKeyboard.OnActionInputMidi += ProcessEvent;
+        MidiKeyboard.OnActionInputMidi += ReadEvent;
         MidiKeyboard.MPTK_SetRealTimeRead();
     }
 
-    private void ProcessEvent(MPTKEvent midiEvent)
+    public void ReadEvent(MPTKEvent midiEvent)
     {
-        Debug.Log("Note :" + midiEvent.Value + " - Velocity : " + midiEvent.Velocity);
-        MidiKeyboard.MPTK_PlayEvent(midiEvent, indexOutput);
+        Debug.Log("Im processing a  " + midiEvent.Command);
+
+        if(playMode)
+        {
+            Debug.Log("Play Mode");
+            MidiSend play;
+            play = new MidiSend();
+            play.indexOutput = indexOutput;
+            play.SendEvent(midiEvent);
+        }
+
+        else
+        {
+
+        }
     }
 
     private void OnApplicationQuit()
@@ -38,4 +45,3 @@ public class MidiReader : MonoBehaviour
         MidiKeyboard.MPTK_CloseAllInp();
     }
 }
-
