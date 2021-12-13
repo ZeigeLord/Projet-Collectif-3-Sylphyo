@@ -9,18 +9,31 @@ public class Exercice : MonoBehaviour
     /// this class contains all methods relative to the exercices of the application
     /// subclasses refer to the corresponding type of exercices
     /// </summary>
-
+    
+    // Saved Data
+    public bool exerciceTried = false;
+    public bool exerciceSucceeded = false;
+    public float lastScore = 0;
+    public float highScore = 0;
+    
+    float successLimit = 60; //Fixed
+    
+    // Temporary Data
     float mistakesCounter = 0;
-    bool exerciceSucceeded = false;
     float successReference = 0;
     float successRate = 0;
-    float successLimit = 60;
+    
     public GameObject cube;
     VisualFeedback visualFeedback;
 
     // Start is called before the first frame update
     void Start()
     {
+        if (exerciceTried == false){
+            exerciceTried = true;
+            SaveData();
+        }
+        LoadData();
         visualFeedback = gameObject.AddComponent<VisualFeedback>();
     }
 
@@ -67,7 +80,7 @@ public class Exercice : MonoBehaviour
                 continue;
             }
 
-            Debug.Log("Début entrée MIDI");
+            Debug.Log("DÃ©but entrÃ©e MIDI");
             DisplayVisualFeedback(exerciceMidiReader.inputMidiEvent, "Note");
             if (IsCorrect(exerciceMidiReader.inputMidiEvent, exerciceMidiReader.inputMidiEvent) == false) //to be modified
             {
@@ -81,15 +94,23 @@ public class Exercice : MonoBehaviour
 
         //when exercice is finished
         successRate = ((successReference - mistakesCounter) / successReference) * 100;
-
+        
         if (successRate >= successLimit)
         {
             Debug.Log("You win");
             exerciceSucceeded = true;
         }
         else
+        {
             Debug.Log("You lose");
-
+        }
         exerciceMidiReader.StopReading();
+        lastScore= successRate;
+        if (successRate > highscore)
+            highscore = successRate;
+        SaveData();
     }
-}
+    
+    public virtual void SaveData(){};
+    public virtual void LoadData(){};
+};
