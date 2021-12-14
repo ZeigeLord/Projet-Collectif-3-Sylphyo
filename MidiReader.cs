@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using MidiPlayerTK;
 
 public class MidiReader : MonoBehaviour
@@ -15,15 +16,18 @@ public class MidiReader : MonoBehaviour
     public bool tutoMode = false;
     public MPTKEvent inputMidiEvent = null;
     MidiSend playSender;
+    public Slider slider;
 
     void Start()
     {
         playSender = gameObject.AddComponent<MidiSend>();
         playSender.indexOutput = indexOutput;
-        MidiKeyboard.MPTK_Init();
-        MidiKeyboard.MPTK_OpenAllInp();
-        MidiKeyboard.OnActionInputMidi += ReadEvent;
-        MidiKeyboard.MPTK_SetRealTimeRead();
+        slider.GetComponent<Slider>();
+    }
+
+    void Update()
+    {
+        ChangeValue();
     }
 
     public void LaunchReading()
@@ -32,6 +36,14 @@ public class MidiReader : MonoBehaviour
         MidiKeyboard.MPTK_OpenAllInp();
         MidiKeyboard.OnActionInputMidi += ReadEvent;
         MidiKeyboard.MPTK_SetRealTimeRead();      
+    }
+
+    public void ChangeValue()
+    {
+        if (inputMidiEvent == null)
+            slider.value = 0;
+        else if (inputMidiEvent.Controller == MPTKController.Expression)
+            slider.value = inputMidiEvent.Value;
     }
 
     public void ReadEvent(MPTKEvent midiEvent)
