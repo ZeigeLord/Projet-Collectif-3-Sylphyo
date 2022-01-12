@@ -9,32 +9,101 @@ public class MidiInOut : MonoBehaviour
     /// Manages MIDI stream
     /// <summary>
 
-
     ////////////////MEMBERS////////////////
 
     public MidiFilePlayer midiFilePlayer;
-    public string fileName;
     public int indexOutput;
     public MPTKEvent inputMidiEvent = null;
+    public MidiLoad midiLoad;
 
 
 
     ////////////////METHODS////////////////
 
     // File Playing //
-
-    public void playFile()
+    public void SetFile(int level, int typeId, int exerciceId)
     {
-        midiFilePlayer.MPTK_MidiName = fileName;
+        switch(level)
+        {
+            case 1:
+                switch (exerciceId)
+                {
+                    case 1:
+                        midiFilePlayer.MPTK_MidiName = "ex_1_1";
+                        break;
+                    case 2:
+                        midiFilePlayer.MPTK_MidiName = "ex_1_2";
+                        break;
+                    case 3:
+                        midiFilePlayer.MPTK_MidiName = "ex_1_3";
+                        break;
+                    case 4:
+                        midiFilePlayer.MPTK_MidiName = "ex_1_4";
+                        break;
+                    default:
+                        break;
+                }
+                break;
+            case 2:
+                switch (typeId)
+                {
+                    case 1:
+                        switch (exerciceId)
+                        {
+                            case 1:
+                                midiFilePlayer.MPTK_MidiName = "ex_2_1_1";
+                                break;
+                            case 2:
+                                midiFilePlayer.MPTK_MidiName = "ex_2_1_2";
+                                break;
+                            case 3:
+                                midiFilePlayer.MPTK_MidiName = "ex_2_1_3";
+                                break;
+                            default:
+                                break;
+                        }
+                        break;
+                    case 2:
+                        switch (exerciceId)
+                        {
+                            case 1:
+                                midiFilePlayer.MPTK_MidiName = "ex_2_2_1";
+                                break;
+                            case 2:
+                                midiFilePlayer.MPTK_MidiName = "ex_2_2_2";
+                                break;
+                            case 3:
+                                midiFilePlayer.MPTK_MidiName = "ex_2_2_3";
+                                break;
+                            default:
+                                break;
+                        }
+                        break;
+                    default:
+                        break;
+                }
+                break;
+            default:
+                break;
+        }
+    }
+
+    public void LoadFile()
+    {
+        midiLoad = midiFilePlayer.MPTK_Load();
+    }
+
+    public void PlayFile()
+    {
         midiFilePlayer.MPTK_Play();
     }
 
-    public void decreaseTempo()
+    public void DecreaseTempo()
     {
         midiFilePlayer.MPTK_Speed -= 0.1f;
     }
 
-    public void inscreaseTempo()
+    public void InscreaseTempo()
     {
         midiFilePlayer.MPTK_Speed += 0.1f;
     }
@@ -104,5 +173,4 @@ public class MidiInOut : MonoBehaviour
         MidiKeyboard.MPTK_UnsetRealTimeRead();
         MidiKeyboard.MPTK_CloseAllInp();
     }
-
 }

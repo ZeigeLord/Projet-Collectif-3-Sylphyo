@@ -1,17 +1,41 @@
+using System;
+using System.IO;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+
 public class UserData : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
+    private string path;
+    private string json;
+    public string userName;
+    public bool[] tutorialsFinished;
+    public bool[] exercicesFinished;
+    public float[] highestScores;
+
+    [Serializable]
+    public class Data
     {
-        
+        public string _userName;
+        public bool[] _tutorialsFinished;
+        public bool[] _exercicesFinished;
+        public float[] _highestScores;
     }
 
-    // Update is called once per frame
-    void Update()
+    public void Save()
+    {
+        path = Application.streamingAssetsPath;
+
+        FileStream fileStream = new FileStream(path, FileMode.Create);
+
+        using (StreamWriter writer = new StreamWriter(fileStream))
+        {
+            writer.Write(json);
+        }
+    }
+
+    public void Load()
     {
         
     }
