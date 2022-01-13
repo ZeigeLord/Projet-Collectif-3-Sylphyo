@@ -14,13 +14,12 @@ public class MidiInOut : MonoBehaviour
     public MidiFilePlayer midiFilePlayer;
     public int indexOutput;
     public MPTKEvent inputMidiEvent = null;
-    public MidiLoad midiLoad;
-
 
 
     ////////////////METHODS////////////////
 
     // File Playing //
+
     public void SetFile(int level, int typeId, int exerciceId)
     {
         switch(level)
@@ -88,11 +87,6 @@ public class MidiInOut : MonoBehaviour
         }
     }
 
-    public void LoadFile()
-    {
-        midiLoad = midiFilePlayer.MPTK_Load();
-    }
-
     public void PlayFile()
     {
         midiFilePlayer.MPTK_Play();
@@ -108,10 +102,15 @@ public class MidiInOut : MonoBehaviour
         midiFilePlayer.MPTK_Speed += 0.1f;
     }
 
+    public MPTKEvent GetEvent()
+    {
+        return midiFilePlayer.MPTK_LastEventPlayed;
+    }
+
 
     // Event Reading //
 
-    public void LaunchReading()
+    public void StartReading()
     {
         MidiKeyboard.MPTK_Init();
         MidiKeyboard.MPTK_OpenAllInp();
@@ -122,6 +121,8 @@ public class MidiInOut : MonoBehaviour
     public void ReadEvent(MPTKEvent midiEvent)
     {
         inputMidiEvent = midiEvent;
+        if (StartSending() == true)
+            SendEvent(midiEvent);
     }
 
     public void StopReading()
@@ -133,9 +134,10 @@ public class MidiInOut : MonoBehaviour
 
     // Event Sending
 
-    public void LaunchSending()
+    public bool StartSending()
     {
         MidiKeyboard.MPTK_OpenOut(indexOutput);
+        return true;
     }
 
     public void SendEvent(MPTKEvent midiEvent)
@@ -170,7 +172,7 @@ public class MidiInOut : MonoBehaviour
 
     private void OnApplicationQuit()
     {
-        MidiKeyboard.MPTK_UnsetRealTimeRead();
-        MidiKeyboard.MPTK_CloseAllInp();
+        StopReading();
+        StopSending();
     }
 }
