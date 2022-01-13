@@ -14,22 +14,26 @@ public class Exercice : MonoBehaviour
     public Computing myComputing;
     public GraphicInterface myGrapicInterface;
     public UserData myUserData;
-    public int level;
     public int exerciceId;
-    public int typeId;
     public float score;
-    public bool finished;
+    public float highestScore;
+    public bool isFinished;
+    private bool playing;
 
 
     ////////////////METHODS////////////////
 
     // GraphicInterface Communication
 
+
+
+
+
     // MidiInOut Communication
     
     public void SetMidiStream()
     {
-        myMidiInOut.SetFile(level, typeId, exerciceId);
+        myMidiInOut.SetFile(exerciceId);
         myMidiInOut.StartReading();
         //myMidiInOut.StartSending();
     }
@@ -40,8 +44,63 @@ public class Exercice : MonoBehaviour
         myMidiInOut.StopSending();
     }
 
+    public void StartBackingTrack()
+    {
+        myMidiInOut.PlayFile();
+    }
+
 
     // Computing Communication
 
+
+
+
+
+
     // UserData Communication
+
+    public float GetHighestScore()
+    {
+        return myUserData.highestScores[exerciceId];
+    }
+
+    public bool GetIsFinished()
+    {
+        return myUserData.exercicesFinished[exerciceId];
+    }
+
+    public void SetHighestScore()
+    {
+        myUserData.highestScores[exerciceId] = score;
+    }
+    
+    public void SetFinished()
+    {
+        myUserData.exercicesFinished[exerciceId] = isFinished;
+    }
+
+
+
+
+    // Processing
+
+    public void Process()
+    {
+        isFinished = GetIsFinished();
+        highestScore = GetHighestScore();
+        //SetGraphicInteface
+        SetMidiStream();
+        StartBackingTrack();
+        playing = true;
+    }
+
+    void Update()
+    {
+        if (playing)
+        {
+            //checking
+            //incrémentation score ou non
+            //update graphic
+        }
+    }
 }
