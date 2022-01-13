@@ -20,67 +20,39 @@ public class MidiInOut : MonoBehaviour
 
     // File Playing //
 
-    public void SetFile(int level, int typeId, int exerciceId)
+    public void SetFile(int exerciceId)
     {
-        switch(level)
+        switch(exerciceId)
         {
             case 1:
-                switch (exerciceId)
-                {
-                    case 1:
-                        midiFilePlayer.MPTK_MidiName = "ex_1_1";
-                        break;
-                    case 2:
-                        midiFilePlayer.MPTK_MidiName = "ex_1_2";
-                        break;
-                    case 3:
-                        midiFilePlayer.MPTK_MidiName = "ex_1_3";
-                        break;
-                    case 4:
-                        midiFilePlayer.MPTK_MidiName = "ex_1_4";
-                        break;
-                    default:
-                        break;
-                }
+                midiFilePlayer.MPTK_MidiName = "ex_1_1";
                 break;
             case 2:
-                switch (typeId)
-                {
-                    case 1:
-                        switch (exerciceId)
-                        {
-                            case 1:
-                                midiFilePlayer.MPTK_MidiName = "ex_2_1_1";
-                                break;
-                            case 2:
-                                midiFilePlayer.MPTK_MidiName = "ex_2_1_2";
-                                break;
-                            case 3:
-                                midiFilePlayer.MPTK_MidiName = "ex_2_1_3";
-                                break;
-                            default:
-                                break;
-                        }
-                        break;
-                    case 2:
-                        switch (exerciceId)
-                        {
-                            case 1:
-                                midiFilePlayer.MPTK_MidiName = "ex_2_2_1";
-                                break;
-                            case 2:
-                                midiFilePlayer.MPTK_MidiName = "ex_2_2_2";
-                                break;
-                            case 3:
-                                midiFilePlayer.MPTK_MidiName = "ex_2_2_3";
-                                break;
-                            default:
-                                break;
-                        }
-                        break;
-                    default:
-                        break;
-                }
+                midiFilePlayer.MPTK_MidiName = "ex_1_2";
+                break;
+            case 3:
+                midiFilePlayer.MPTK_MidiName = "ex_1_3";
+                break;
+            case 4:
+                midiFilePlayer.MPTK_MidiName = "ex_1_4";
+                break;
+            case 5:
+                midiFilePlayer.MPTK_MidiName = "ex_2_1_1";
+                break;
+            case 6:
+                midiFilePlayer.MPTK_MidiName = "ex_2_1_2";
+                break;
+            case 7:
+                midiFilePlayer.MPTK_MidiName = "ex_2_1_3";
+                break;
+            case 8:
+                midiFilePlayer.MPTK_MidiName = "ex_2_2_1";
+                break;
+            case 9:
+                midiFilePlayer.MPTK_MidiName = "ex_2_2_2";
+                break;
+            case 10:
+                midiFilePlayer.MPTK_MidiName = "ex_2_2_3";
                 break;
             default:
                 break;
