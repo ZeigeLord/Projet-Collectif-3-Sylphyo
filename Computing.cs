@@ -11,96 +11,85 @@ public class Computing : MonoBehaviour
     public UserData myUserData;
     public bool finished;
     MPTKEvent midiEvent_jouer, midiEvent_ref;
-    int id;
 
-    public static bool accuracy_note(MPTKEvent midiEvent_jouer, MPTKEvent midiEvent_ref)
+    public bool accuracy_note(MPTKEvent midiEvent_jouer, MPTKEvent midiEvent_ref, int id)
     {
-        if(midiEvent_jouer.Command==MPTKCommand.NoteOn && midiEvent_ref.Command==MPTKCommand.NoteOn)
+        if (midiEvent_jouer.Command == MPTKCommand.NoteOn && midiEvent_ref.Command == MPTKCommand.NoteOn)
         {
-            if(midiEvent_jouer.Value==midiEvent_ref.Value)
+            if (midiEvent_jouer.Value == midiEvent_ref.Value)
                 return true;
             else
                 return false;
         }
         else
-            if (intervall_tuto(id) == true || intervall_exercice(id)==true)
-                return true;
-            else
-                return false;
+            if (intervall_tuto(id) == true || intervall_exercice(id) == true)
+            return true;
+        else
+            return false;
     }
 
     public bool intervall_tuto(int id)
     {
 
-        switch(id)
+        switch (id)
         {
             case 1:
-                if(midiEvent_jouer.Value == midiEvent_ref.Value -15 || midiEvent_jouer.Value == midiEvent_ref.Value + 15)
+                if (midiEvent_jouer.Value == midiEvent_ref.Value - 15 || midiEvent_jouer.Value == midiEvent_ref.Value + 15)
                     return true;
                 else
                     return false;
-                break;
             case 2:
-                if(midiEvent_jouer.Value == midiEvent_ref.Value -10 || midiEvent_jouer.Value == midiEvent_ref.Value + 10)
+                if (midiEvent_jouer.Value == midiEvent_ref.Value - 10 || midiEvent_jouer.Value == midiEvent_ref.Value + 10)
                     return true;
                 else
                     return false;
-                break;
             case 3:
-                if(midiEvent_jouer.Value == midiEvent_ref.Value -15 || midiEvent_jouer.Value == midiEvent_ref.Value + 15)
+                if (midiEvent_jouer.Value == midiEvent_ref.Value - 15 || midiEvent_jouer.Value == midiEvent_ref.Value + 15)
                     return true;
                 else
                     return false;
-                break;
-            case 4: 
-                if(midiEvent_jouer.Value == midiEvent_ref.Value -15 || midiEvent_jouer.Value == midiEvent_ref.Value + 15)
+            case 4:
+                if (midiEvent_jouer.Value == midiEvent_ref.Value - 15 || midiEvent_jouer.Value == midiEvent_ref.Value + 15)
                     return true;
                 else
                     return false;
-                break;
             default:
                 return false;
-                break;
         }
     }
 
     public bool intervall_exercice(int id)
     {
-        switch(id)
+        switch (id)
         {
             case 1:
-                if(midiEvent_jouer.Value == midiEvent_ref.Value -15 || midiEvent_jouer.Value == midiEvent_ref.Value + 15)
+                if (midiEvent_jouer.Value == midiEvent_ref.Value - 15 || midiEvent_jouer.Value == midiEvent_ref.Value + 15)
                     return true;
                 else
                     return false;
-                break;
             case 2:
-                if(midiEvent_jouer.Value == midiEvent_ref.Value -8 || midiEvent_jouer.Value == midiEvent_ref.Value + 8)
+                if (midiEvent_jouer.Value == midiEvent_ref.Value - 8 || midiEvent_jouer.Value == midiEvent_ref.Value + 8)
                     return true;
                 else
                     return false;
-                break;
             case 3:
-                if(midiEvent_jouer.Value == midiEvent_ref.Value -7 || midiEvent_jouer.Value == midiEvent_ref.Value + 15)
+                if (midiEvent_jouer.Value == midiEvent_ref.Value - 7 || midiEvent_jouer.Value == midiEvent_ref.Value + 15)
                     return true;
                 else
                     return false;
-                break;
-            case 4: 
-                if(midiEvent_jouer.Value == midiEvent_ref.Value -14 || midiEvent_jouer.Value == midiEvent_ref.Value + 7)
+            case 4:
+                if (midiEvent_jouer.Value == midiEvent_ref.Value - 14 || midiEvent_jouer.Value == midiEvent_ref.Value + 7)
                     return true;
                 else
                     return false;
-                break;
             default:
                 return false;
-                break;
         }
     }
 
-    public void score (float score, float score_max)
+    public void score(float score, float score_max)
     {
-        if(score >= score_max)
+        if (score >= score_max)
             finished = true;
         else
             finished = false;
@@ -108,8 +97,8 @@ public class Computing : MonoBehaviour
 
     public void meilleur_score(float score, float score_max)
     {
-        if(score > score_max) 
+        if (score > score_max)
             score = score_max;
     }
- 
+
 }

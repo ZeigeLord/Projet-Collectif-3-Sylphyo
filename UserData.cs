@@ -25,7 +25,15 @@ public class UserData : MonoBehaviour
 
     public void Save()
     {
+        Data saveData = new Data();
+        saveData._userName = userName;
+        saveData._tutorialsFinished = tutorialsFinished;
+        saveData._exercicesFinished = exercicesFinished;
+        saveData._highestScores = highestScores;
+
         path = Application.streamingAssetsPath;
+
+        json = JsonUtility.ToJson(saveData);
 
         FileStream fileStream = new FileStream(path, FileMode.Create);
 
@@ -35,8 +43,26 @@ public class UserData : MonoBehaviour
         }
     }
 
+    public string ConvertData()
+    {
+        string path = Application.streamingAssetsPath;
+
+        using (StreamReader reader = new StreamReader(path))
+        {
+            json = reader.ReadToEnd();
+            return json;
+        }
+    }
+
     public void Load()
     {
-        
+        string dataToConvert = ConvertData();
+
+        Data dataToLoad = new Data();
+        dataToLoad = JsonUtility.FromJson<Data>(dataToConvert);
+        //userName = dataToLoad._userName;
+        tutorialsFinished = dataToLoad._tutorialsFinished;
+        exercicesFinished = dataToLoad._exercicesFinished;
+        highestScores = dataToLoad._highestScores;        
     }
 }

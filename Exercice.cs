@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using MidiPlayerTK;
 
 public class Exercice : MonoBehaviour
 {
@@ -14,6 +15,7 @@ public class Exercice : MonoBehaviour
     public Computing myComputing;
     public GraphicInterface myGrapicInterface;
     public UserData myUserData;
+    public List<MPTKEvent> eventsList;
     public int exerciceId;
     public float score;
     public float highestScore;
@@ -34,6 +36,7 @@ public class Exercice : MonoBehaviour
     public void SetMidiStream()
     {
         myMidiInOut.SetFile(exerciceId);
+        eventsList = myMidiInOut.GetAllEvents();
         myMidiInOut.StartReading();
         //myMidiInOut.StartSending();
     }
@@ -52,8 +55,10 @@ public class Exercice : MonoBehaviour
 
     // Computing Communication
 
-
-
+    public bool Checking(MPTKEvent refEvent, MPTKEvent playingEvent, int id)
+    {
+        return myComputing.accuracy_note(playingEvent, refEvent, id);
+    }
 
 
 
@@ -78,8 +83,6 @@ public class Exercice : MonoBehaviour
     {
         myUserData.exercicesFinished[exerciceId] = isFinished;
     }
-
-
 
 
     // Processing

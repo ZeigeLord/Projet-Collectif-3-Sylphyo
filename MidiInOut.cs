@@ -74,9 +74,14 @@ public class MidiInOut : MonoBehaviour
         midiFilePlayer.MPTK_Speed += 0.1f;
     }
 
-    public MPTKEvent GetEvent()
+    public MPTKEvent GetCurrentEvent()
     {
         return midiFilePlayer.MPTK_LastEventPlayed;
+    }
+
+    public List<MPTKEvent> GetAllEvents()
+    {
+        return midiFilePlayer.MPTK_ReadMidiEvents();
     }
 
 
@@ -93,7 +98,7 @@ public class MidiInOut : MonoBehaviour
     public void ReadEvent(MPTKEvent midiEvent)
     {
         inputMidiEvent = midiEvent;
-        if (StartSending() == true)
+        if (StartSending())
             SendEvent(midiEvent);
     }
 
