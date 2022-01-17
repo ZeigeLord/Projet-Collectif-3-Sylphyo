@@ -1,7 +1,7 @@
-
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using MidiPlayerTK;
 
 public class Exercice : MonoBehaviour
 {
@@ -15,11 +15,13 @@ public class Exercice : MonoBehaviour
     public Computing myComputing;
     public GraphicInterface myGrapicInterface;
     public UserData myUserData;
+    public List<MPTKEvent> eventsList;
     public int exerciceId;
-    public float score;
+    public float score = 0;
     public float highestScore;
     public bool isFinished;
-    private bool playing;
+    private bool playing = false;
+    private int regulator = 0;
 
 
     ////////////////METHODS////////////////
@@ -35,6 +37,7 @@ public class Exercice : MonoBehaviour
     public void SetMidiStream()
     {
         myMidiInOut.SetFile(exerciceId);
+        eventsList = myMidiInOut.GetAllEvents();
         myMidiInOut.StartReading();
         //myMidiInOut.StartSending();
     }
@@ -53,8 +56,10 @@ public class Exercice : MonoBehaviour
 
     // Computing Communication
 
-
-
+    public bool Checking(MPTKEvent playingEvent, MPTKEvent refEvent, int id)
+    {
+        return myComputing.accuracy_note(playingEvent, refEvent, id);
+    }
 
 
 
@@ -81,15 +86,13 @@ public class Exercice : MonoBehaviour
     }
 
 
-
-
     // Processing
 
     public void Process()
     {
         isFinished = GetIsFinished();
         highestScore = GetHighestScore();
-        //SetGraphicInteface
+        //SetGraphicInterface
         SetMidiStream();
         StartBackingTrack();
         playing = true;
@@ -98,10 +101,24 @@ public class Exercice : MonoBehaviour
     void Update()
     {
         if (playing)
-        {
-            //checking
-            //incrémentation score ou non
-            //update graphic
+        {   if (myMidiInOut.midiFilePlayer.MPTK_TickCurrent != myMidiInOut.midiFilePlayer.MPTK_TickLast)
+            {
+                if (regulator % 25 == 0)
+                {
+                    regulator = 0;
+                    if (Checking(myMidiInOut.inputMidiEvent, myMidiInOut.GetCurrentEvent(), exerciceId))
+                        score++;
+                    //update graphic
+                }
+            }
+            else
+            {
+                if (Checking(myMidiInOut.inputMidiEvent, myMidiInOut.GetCurrentEvent(), exerciceId))
+                    score++;
+                //update graphic
+                playing = false;
+            }
+            regulator++;
         }
     }
 }
