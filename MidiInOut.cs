@@ -15,7 +15,7 @@ public class MidiInOut : MonoBehaviour
     public int indexOutput;
     public MPTKEvent inputMidiEvent = null;
 
-
+    public int[] pitchHistory = new int[500];
     ////////////////METHODS////////////////
 
     // File Playing //
@@ -95,10 +95,25 @@ public class MidiInOut : MonoBehaviour
         MidiKeyboard.MPTK_SetRealTimeRead();
     }
 
+    void UpdatePitchHistory(int pitch){
+
+        Debug.Log(pitch);
+        for (int i = pitchHistory.Length-1; i > 0; i--)
+        {            
+            pitchHistory[i] = pitchHistory[i-1];
+        }
+        pitchHistory[0] = pitch;
+    }
+
     public void ReadEvent(MPTKEvent midiEvent)
     {
         inputMidiEvent = midiEvent;
-        if (StartSending())
+        if (midiEvent.Command != MPTKCommand.NoteOff)
+        {
+            UpdatePitchHistory(midiEvent.Value);
+        }
+                
+        if (StartSending() == true)
             SendEvent(midiEvent);
     }
 
@@ -144,6 +159,10 @@ public class MidiInOut : MonoBehaviour
             Debug.Log("Error : Only 34 sounds available");
     }
   
+    public void Process()
+    {
+        StartSending();
+    }
     
     // Application Processing
 
