@@ -2,28 +2,62 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-using UnityEngine.SceneManagement;
 
 public class PanelFader : MonoBehaviour
 {
-    public GameObject Panel;
-    int counter;
+    public GameObject panel, previousPanel, aidePanel; //, previous_panel;
+    //int counter;
 
-    public void showhidePanel()
+    public void hidePanel(int id)
     {
-        counter++;
+        switch(id)
+        {
+            case 1:
+                panel.gameObject.SetActive(false);
+                previousPanel.gameObject.SetActive(true);
+                break;
+            default:
+                break;
+        }
+        /*counter++;
         if(counter % 2 == 1)
         {
-            Panel.gameObject.SetActive(false);
+            panel.gameObject.SetActive(false);
         } else
         {
-            Panel.gameObject.SetActive(true);
+            panel.gameObject.SetActive(true);
+        }*/
+    }
+
+    public void aide(int id)
+    {
+        switch(id)
+        {
+            case 1:
+                aidePanel.gameObject.SetActive(true);
+                break;
+            default:
+                break;
         }
     }
+
+    public void cross(int id)
+    {
+        switch(id)
+        {
+            case 1:
+                aidePanel.gameObject.SetActive(false);
+                break;
+            default:
+                break;
+        }
+    }
+
     // Start is called before the first frame update
     void Start()
     {
-        
+       aidePanel.gameObject.SetActive(false);
+        //previous_panel.gameObject.SetActive(false);
     }
 
     // Update is called once per frame
@@ -31,4 +65,9 @@ public class PanelFader : MonoBehaviour
     {
         
     }
+    /*public void hidePanel()
+    {
+        panel.gameObject.SetActive(false);
+        previous_panel.gameObject.SetActive(true);
+    }*/
 }
