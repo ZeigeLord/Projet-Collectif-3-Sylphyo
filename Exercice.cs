@@ -22,7 +22,6 @@ public class Exercice : MonoBehaviour
     public float highestScore;
     public bool isFinished;
     private bool playing = false;
-    private int regulator = 0;
 
 
     ////////////////METHODS////////////////
@@ -124,13 +123,9 @@ public class Exercice : MonoBehaviour
         if (playing)
         {   if (myMidiInOut.midiFilePlayer.MPTK_TickCurrent != myMidiInOut.midiFilePlayer.MPTK_TickLast)
             {
-                if (regulator % 25 == 0)
-                {
-                    regulator = 0;
-                    if (Checking(myMidiInOut.inputMidiEvent, myMidiInOut.GetCurrentEvent(), exerciceId))
-                        score++;
-                    //update graphic
-                }
+                if (Checking(myMidiInOut.inputMidiEvent, myMidiInOut.GetCurrentEvent(), exerciceId))
+                    score++;
+                //update graphic
             }
             else
             {
@@ -140,7 +135,6 @@ public class Exercice : MonoBehaviour
                 playing = false;
                 EndOfExercice();
             }
-            regulator++;
         }
     }
 }
