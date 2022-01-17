@@ -1,9 +1,11 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using MidiPlayerTK;
 
-public class Rouli : MonoBehaviour
+public class Roulis : Tutorial
 {
+    public Tutorial tutorial;
     // Start is called before the first frame update
     void Start()
     {
@@ -14,5 +16,20 @@ public class Rouli : MonoBehaviour
     void Update()
     {
         
+    }
+    public void ChangeValue()
+    {
+
+    }
+
+    public void Message_good()
+    {
+
+            
+    }
+    public void Process()
+    {
+        ChangeValue();
+        Message_good();
     }
 }

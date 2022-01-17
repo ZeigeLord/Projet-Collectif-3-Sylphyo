@@ -2,10 +2,12 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using MidiPlayerTK;
 
 
-public class Nuance : Tutoriel
+public class Nuance : Tutorial
 {
+    public Tutorial tutorial;
     public Slider referenceSlider, playerSlider;
     public Text textField;
     public float[] valeurs = new float[] {25, 56, 102};
@@ -58,6 +60,11 @@ public class Nuance : Tutoriel
             textField.color = Color.red;
         }
             
+    }
+    public void Process()
+    {
+        ChangeValue();
+        Message_good();
     }
 
         

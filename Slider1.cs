@@ -1,9 +1,11 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using MidiPlayerTK;
 
-public class Slider1 : MonoBehaviour
+public class Slider1 : Tutorial
 {
+    public Tutorial tutorial;
     // Start is called before the first frame update
     void Start()
     {
@@ -14,5 +16,20 @@ public class Slider1 : MonoBehaviour
     void Update()
     {
         
+    }
+    public void ChangeValue()
+    {
+
+    }
+
+    public void Message_good()
+    {
+
+            
+    }
+    public void Process()
+    {
+        ChangeValue();
+        Message_good();
     }
 }

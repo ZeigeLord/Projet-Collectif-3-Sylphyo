@@ -2,30 +2,21 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using MidiPlayerTK;
 
-
-public class Nuance : Tutoriel
+public class Attaques : Tutorial
 {
-    public Slider referenceSlider, playerSlider;
-    public Text textField;
-    public float[] valeurs = new float[] {25, 56, 102};
-    private int myInt;
-    bool crescendo;
     public MidiInOut midiInOut;
-    public MidiFilePlayer midiFilePlayer;
-    public string fileName;
-    public int indexOutput;
-    public MPTKEvent inputMidiEvent = null;
+    public MidiFilePlayer midiFile;
+    public string file;
+    public int index;
+    public MPTKEvent input = null;
+    public Tutorial tutorial;
     
     void Start()
     {
-        referenceSlider.GetComponent<Slider>();
-        playerSlider.GetComponent<Slider>();
-        textField.GetComponent<Text>();
-        midiInOut.GetComponent<MidiInOut>();
-        MidiInOut midiInOut = new MidiInOut(midiFile, file, index, input);
-        myInt = 1;
-        referenceSlider.value = valeurs[0];
+        //midiInOut.GetComponent<MidiInOut>();
+        //MidiInOut midiInOut = new MidiInOut(midiFile, index, input);
     }
 
     // Update is called once per frame
@@ -44,5 +35,10 @@ public class Nuance : Tutoriel
             
     }
 
+    public void Process()
+    {
+        ChangeValue();
+        Message_good();
+    }
         
 }
