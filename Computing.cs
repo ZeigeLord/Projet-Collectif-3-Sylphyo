@@ -13,7 +13,8 @@ public class Computing : MonoBehaviour
     ////////////////MEMBERS////////////////
 
     MPTKEvent midiEvent_jouer, midiEvent_ref;
-
+    public int[128] fingering_current;
+    private int[9,128] fingering_chart;  //= new int[9,128]; //reste à définir où déclarer la correspondance
 
     ////////////////METHODS////////////////
 
@@ -107,5 +108,8 @@ public class Computing : MonoBehaviour
         else
             return false;
     }
- 
+    
+    public void midiToFingering(int midiPitchValue){
+    
+    }
 }
