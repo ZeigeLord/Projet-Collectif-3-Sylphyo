@@ -9,6 +9,7 @@ public class MidiInOut : MonoBehaviour
     /// Manages MIDI stream
     /// <summary>
 
+
     ////////////////MEMBERS////////////////
 
     public MidiFilePlayer midiFilePlayer;
@@ -16,6 +17,8 @@ public class MidiInOut : MonoBehaviour
     public MPTKEvent inputMidiEvent = null;
 
     public int[] pitchHistory = new int[500];
+
+
     ////////////////METHODS////////////////
 
     // File Playing //
@@ -74,9 +77,14 @@ public class MidiInOut : MonoBehaviour
         midiFilePlayer.MPTK_Speed += 0.1f;
     }
 
-    public MPTKEvent GetEvent()
+    public MPTKEvent GetCurrentEvent()
     {
         return midiFilePlayer.MPTK_LastEventPlayed;
+    }
+
+    public List<MPTKEvent> GetAllEvents()
+    {
+        return midiFilePlayer.MPTK_ReadMidiEvents();
     }
 
 
