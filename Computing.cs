@@ -12,50 +12,52 @@ public class Computing : MonoBehaviour
 
     ////////////////MEMBERS////////////////
 
-    MPTKEvent midiEvent_jouer, midiEvent_ref;
-    public int[128] fingering_current;
-    private int[9,128] fingering_chart;  //= new int[9,128]; //reste à définir où déclarer la correspondance
+    MPTKEvent midiEventCurrent, midiEventRef;
+
+    public string instrumentChosen;
+    InstrumentData( instrumentChosen ) instrumentData;
+    public int[9] fingeringCurrent;
 
     ////////////////METHODS////////////////
-
-    public bool accuracy_note(MPTKEvent midiEvent_jouer, MPTKEvent midiEvent_ref, int id)
+     
+    public bool AccuracyNote( MPTKEvent midiEventCurrent, MPTKEvent midiEventRef, int id )
     {
-        if(midiEvent_jouer.Command==MPTKCommand.NoteOn && midiEvent_ref.Command==MPTKCommand.NoteOn)
+        if( midiEventCurrent.Command==MPTKCommand.NoteOn && midiEventRef.Command==MPTKCommand.NoteOn )
         {
-            if(midiEvent_jouer.Value==midiEvent_ref.Value)
+            if( midiEventCurrent.Value==midiEventRef.Value )
                 return true;
             else
                 return false;
         }
         else
-            if (intervall_tuto(id) == true || intervall_exercice(id)==true)
+            if ( IntervalTuto( id ) == true || IntervalExercice( id )==true )
                 return true;
             else
                 return false;
     }
 
-    public bool intervall_tuto(int id)
+    public bool IntervalTuto( int id )
     {
 
-        switch(id)
+        switch( id )
         {
             case 1:
-                if(midiEvent_jouer.Value == midiEvent_ref.Value -15 || midiEvent_jouer.Value == midiEvent_ref.Value + 15)
+                if( midiEventCurrent.Value == midiEventRef.Value -15 || midiEventCurrent.Value == midiEventRef.Value + 15 )
                     return true;
                 else
                     return false;
             case 2:
-                if(midiEvent_jouer.Value == midiEvent_ref.Value -10 || midiEvent_jouer.Value == midiEvent_ref.Value + 10)
+                if( midiEventCurrent.Value == midiEventRef.Value -10 || midiEventCurrent.Value == midiEventRef.Value + 10 )
                     return true;
                 else
                     return false;
             case 3:
-                if(midiEvent_jouer.Value == midiEvent_ref.Value -15 || midiEvent_jouer.Value == midiEvent_ref.Value + 15)
+                if( midiEventCurrent.Value == midiEventRef.Value -15 || midiEventCurrent.Value == midiEventRef.Value + 15 )
                     return true;
                 else
                     return false;
             case 4: 
-                if(midiEvent_jouer.Value == midiEvent_ref.Value -15 || midiEvent_jouer.Value == midiEvent_ref.Value + 15)
+                if( midiEventCurrent.Value == midiEventRef.Value -15 || midiEventCurrent.Value == midiEventRef.Value + 15 )
                     return true;
                 else
                     return false;
@@ -64,27 +66,27 @@ public class Computing : MonoBehaviour
         }
     }
 
-    public bool intervall_exercice(int id)
+    public bool IntervalExercice( int id )
     {
-        switch(id)
+        switch( id )
         {
             case 1:
-                if(midiEvent_jouer.Value == midiEvent_ref.Value -15 || midiEvent_jouer.Value == midiEvent_ref.Value + 15)
+                if( midiEventCurrent.Value == midiEventRef.Value -15 || midiEventCurrent.Value == midiEventRef.Value + 15 )
                     return true;
                 else
                     return false;
             case 2:
-                if(midiEvent_jouer.Value == midiEvent_ref.Value -8 || midiEvent_jouer.Value == midiEvent_ref.Value + 8)
+                if( midiEventCurrent.Value == midiEventRef.Value -8 || midiEventCurrent.Value == midiEventRef.Value + 8 )
                     return true;
                 else
                     return false;
             case 3:
-                if(midiEvent_jouer.Value == midiEvent_ref.Value -7 || midiEvent_jouer.Value == midiEvent_ref.Value + 15)
+                if( midiEventCurrent.Value == midiEventRef.Value -7 || midiEventCurrent.Value == midiEventRef.Value + 15 )
                     return true;
                 else
                     return false;
             case 4: 
-                if(midiEvent_jouer.Value == midiEvent_ref.Value -14 || midiEvent_jouer.Value == midiEvent_ref.Value + 7)
+                if( midiEventCurrent.Value == midiEventRef.Value -14 || midiEventCurrent.Value == midiEventRef.Value + 7 )
                     return true;
                 else
                     return false;
@@ -93,23 +95,27 @@ public class Computing : MonoBehaviour
         }
     }
 
-    public bool score (float score, float score_max)
+    public bool Score( float score, float score_max )
     {
-        if(score >= score_max)
+        if( score >= score_max )
             return true;
         else
             return false;
     }
 
-    public bool meilleur_score(float score, float score_max)
+    public bool HighScore( float score, float score_max )
     {
-        if (score > score_max)
+        if ( score > score_max )
             return true;
         else
             return false;
     }
-    
-    public void midiToFingering(int midiPitchValue){
-    
+ 
+    public void MidiToFingering( midiEventCurrent ){
+        if ( midiEventCurrent.Command == MPTKCommand.NoteOn )
+        {
+            for ( int i = 0; i < 9; i++ )
+                fingeringCurrent[i] = instrumentData.GetFingeringChart[midiEventCurrent.Value, i];
+        }
     }
 }
