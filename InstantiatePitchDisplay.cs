@@ -10,7 +10,6 @@ public class InstantiatePitchDisplay : MonoBehaviour
     public GameObject[] pitchDisplayPointsFile = new GameObject[500];
     public MidiInOut mio;
     public int[] pitchHistory = new int[500];
-    //public int[] pitchHistory2 = new int[500];
     MPTKEvent midiEvent;
     int pitch;
     int file;
@@ -18,7 +17,7 @@ public class InstantiatePitchDisplay : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        //mio.StartReading();
+        mio.StartReading();
         //mio.ReadEvent(midiEvent);
         mio.ReadFileEvent();
         mio.UpdatePitchHistory(pitch);

@@ -16,7 +16,6 @@ public class MidiInOut : MonoBehaviour
     public int indexOutput;
     public MPTKEvent inputMidiEvent = null;
     public int[] pitchHistory = new int[500];
-    MPTKEvent midiEvent;
 
 
     ////////////////METHODS////////////////
@@ -124,14 +123,14 @@ public class MidiInOut : MonoBehaviour
     public void ReadFileEvent()
     {
         Debug.Log("VA BIEN TE FAIRE ENCULER");
-        midiFilePlayer.MPTK_MidiName = "seq_sc";
+        /*midiFilePlayer.MPTK_MidiName = "seq_sc";
         PlayFile();
         MPTKEvent midiEvent;
         midiEvent = GetCurrentEvent();
         if (midiEvent.Command != MPTKCommand.NoteOff)
         {
             UpdatePitchHistory(midiEvent.Value);       
-        }
+        }*/
     }
 
     public void StopReading()
