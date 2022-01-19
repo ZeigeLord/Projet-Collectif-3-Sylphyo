@@ -9,20 +9,23 @@ public class MidiInOut : MonoBehaviour
     /// Manages MIDI stream
     /// <summary>
 
+
     ////////////////MEMBERS////////////////
 
     public MidiFilePlayer midiFilePlayer;
     public int indexOutput;
     public MPTKEvent inputMidiEvent = null;
-
     public int[] pitchHistory = new int[500];
+    MPTKEvent midiEvent;
+
+
     ////////////////METHODS////////////////
 
     // File Playing //
 
     public void SetFile(int exerciceId)
     {
-        switch(exerciceId)
+        switch (exerciceId)
         {
             case 1:
                 midiFilePlayer.MPTK_MidiName = "ex_1_1";
@@ -74,9 +77,14 @@ public class MidiInOut : MonoBehaviour
         midiFilePlayer.MPTK_Speed += 0.1f;
     }
 
-    public MPTKEvent GetEvent()
+    public MPTKEvent GetCurrentEvent()
     {
         return midiFilePlayer.MPTK_LastEventPlayed;
+    }
+
+    public List<MPTKEvent> GetAllEvents()
+    {
+        return midiFilePlayer.MPTK_ReadMidiEvents();
     }
 
 
@@ -90,12 +98,13 @@ public class MidiInOut : MonoBehaviour
         MidiKeyboard.MPTK_SetRealTimeRead();
     }
 
-    void UpdatePitchHistory(int pitch){
+    public void UpdatePitchHistory(int pitch)
+    {
 
         Debug.Log(pitch);
-        for (int i = pitchHistory.Length-1; i > 0; i--)
-        {            
-            pitchHistory[i] = pitchHistory[i-1];
+        for (int i = pitchHistory.Length - 1; i > 0; i--)
+        {
+            pitchHistory[i] = pitchHistory[i - 1];
         }
         pitchHistory[0] = pitch;
     }
@@ -107,9 +116,22 @@ public class MidiInOut : MonoBehaviour
         {
             UpdatePitchHistory(midiEvent.Value);
         }
-                
+
         if (StartSending() == true)
             SendEvent(midiEvent);
+    }
+
+    public void ReadFileEvent()
+    {
+        Debug.Log("VA BIEN TE FAIRE ENCULER");
+        midiFilePlayer.MPTK_MidiName = "seq_sc";
+        PlayFile();
+        MPTKEvent midiEvent;
+        midiEvent = GetCurrentEvent();
+        if (midiEvent.Command != MPTKCommand.NoteOff)
+        {
+            UpdatePitchHistory(midiEvent.Value);       
+        }
     }
 
     public void StopReading()
@@ -153,12 +175,7 @@ public class MidiInOut : MonoBehaviour
         else
             Debug.Log("Error : Only 34 sounds available");
     }
-  
-    public void Process()
-    {
-        StartSending();
-    }
-    
+
     // Application Processing
 
     private void OnApplicationQuit()
