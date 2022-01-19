@@ -27,34 +27,37 @@ public class MidiInOut : MonoBehaviour
         switch (exerciceId)
         {
             case 1:
-                midiFilePlayer.MPTK_MidiName = "ex_1_1";
+                midiFilePlayer.MPTK_MidiName = "Exo 1 MIDI";
                 break;
             case 2:
-                midiFilePlayer.MPTK_MidiName = "ex_1_2";
+                midiFilePlayer.MPTK_MidiName = "Exo 2 MIDI";
                 break;
             case 3:
-                midiFilePlayer.MPTK_MidiName = "ex_1_3";
+                midiFilePlayer.MPTK_MidiName = "Octave Ex 1";
                 break;
             case 4:
-                midiFilePlayer.MPTK_MidiName = "ex_1_4";
+                midiFilePlayer.MPTK_MidiName = "Octave Ex 2";
                 break;
             case 5:
-                midiFilePlayer.MPTK_MidiName = "ex_2_1_1";
+                midiFilePlayer.MPTK_MidiName = "Octave Ex3 (chromatique)";
                 break;
             case 6:
-                midiFilePlayer.MPTK_MidiName = "ex_2_1_2";
+                midiFilePlayer.MPTK_MidiName = "intervalles Ex 1";
                 break;
             case 7:
-                midiFilePlayer.MPTK_MidiName = "ex_2_1_3";
+                midiFilePlayer.MPTK_MidiName = "intervalles Ex 2";
                 break;
             case 8:
-                midiFilePlayer.MPTK_MidiName = "ex_2_2_1";
+                midiFilePlayer.MPTK_MidiName = "intervallez Ex 3";
                 break;
             case 9:
-                midiFilePlayer.MPTK_MidiName = "ex_2_2_2";
+                midiFilePlayer.MPTK_MidiName = "intervalles Ex 4";
                 break;
             case 10:
-                midiFilePlayer.MPTK_MidiName = "ex_2_2_3";
+                midiFilePlayer.MPTK_MidiName = "";
+                break;
+            case 11:
+                midiFilePlayer.MPTK_MidiName = "";
                 break;
             default:
                 break;
@@ -99,8 +102,6 @@ public class MidiInOut : MonoBehaviour
 
     public void UpdatePitchHistory(int pitch)
     {
-
-        Debug.Log(pitch);
         for (int i = pitchHistory.Length - 1; i > 0; i--)
         {
             pitchHistory[i] = pitchHistory[i - 1];
@@ -118,19 +119,6 @@ public class MidiInOut : MonoBehaviour
 
         if (StartSending() == true)
             SendEvent(midiEvent);
-    }
-
-    public void ReadFileEvent()
-    {
-        Debug.Log("VA BIEN TE FAIRE ENCULER");
-        /*midiFilePlayer.MPTK_MidiName = "seq_sc";
-        PlayFile();
-        MPTKEvent midiEvent;
-        midiEvent = GetCurrentEvent();
-        if (midiEvent.Command != MPTKCommand.NoteOff)
-        {
-            UpdatePitchHistory(midiEvent.Value);       
-        }*/
     }
 
     public void StopReading()

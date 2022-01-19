@@ -6,77 +6,56 @@ using MidiPlayerTK;
 public class GraphicInterface : MonoBehaviour
 {
     /// <summary>
-    /// Processes graphic interface
+    /// Manages GUI
     /// <summary>
+
 
     ////////////////MEMBERS////////////////
 
-    public MidiInOut midiInOut;
-    //public CircularBuffer cicleBuffer;
-    public MidiFilePlayer midiFilePlayer;
-    public int indexOutput;
-    public MPTKEvent inputMidiEvent = null;
-    public int[] pitchHistory = new int[500];
-    //CircularBuffer<T> queue = new CircularBuffer<T>(500);
-    //midiInOut.Process();
+    public GameObject pitchDisplayPointPrefab, pitchDisplayPointPrefabFile;
+    public GameObject[] pitchDisplayPoints = new GameObject[500];
+    public GameObject[] pitchDisplayPointsFile = new GameObject[500];
+    private MidiInOut myMidiInOut;
+    private bool pitchDisplay = false;
 
 
     ////////////////METHODS////////////////
 
-    public void StartReading()
+    public void StartPitchDisplay()
     {
-        MidiKeyboard.MPTK_Init();
-        MidiKeyboard.MPTK_OpenAllInp();
-        MidiKeyboard.OnActionInputMidi += ReadEvent;
-        MidiKeyboard.MPTK_SetRealTimeRead();
-    }
-
-    void UpdatePitchHistory(int pitch)
-    {
-
-        Debug.Log(pitch);
-        for (int i = pitchHistory.Length - 1; i > 0; i--)
+        myMidiInOut.SetFile(1);
+        for (int i = 0; i < pitchDisplayPoints.Length; i++)
         {
-            pitchHistory[i] = pitchHistory[i - 1];
+            pitchDisplayPoints[i] = GameObject.Instantiate(pitchDisplayPointPrefab);
+            pitchDisplayPoints[i].GetComponent<RectTransform>().localPosition = new Vector3(10 + i * 10, 500, 0);
+            pitchDisplayPoints[i].transform.SetParent(transform);
         }
-        pitchHistory[0] = pitch;
-    }
 
-    public void ReadEvent(MPTKEvent midiEvent)
-    {
-        inputMidiEvent = midiEvent;
-        if (midiEvent.Command != MPTKCommand.NoteOff)
+        for (int i = 0; i < pitchDisplayPointsFile.Length; i++)
         {
-            UpdatePitchHistory(midiEvent.Value);
+            pitchDisplayPointsFile[i] = GameObject.Instantiate(pitchDisplayPointPrefabFile);
+            pitchDisplayPointsFile[i].GetComponent<RectTransform>().localPosition = new Vector3(10 + i * 10, 500, 0);
+            pitchDisplayPointsFile[i].transform.SetParent(transform);
         }
-        //if (StartSending() == true)
-            //SendEvent(midiEvent);
+        pitchDisplay = true;
     }
 
-   /* public void ReadFileEvent(MPTKEvent midiEvent, int exerciceId)
+    void Update()
     {
-        inputMidiEvent = midiEvent;
-        if (midiEvent.Command != MPTKCommand.NoteOff)
+        if (pitchDisplay)
         {
-            switch (exerciceId)
+            if (myMidiInOut.GetCurrentEvent().Command == MPTKCommand.NoteOn)
             {
-                case 1:
-                    midiFilePlayer.MPTK_MidiName = "F:\Asset\Script\MidiFile\Vocalise1.mid";
-                    break;
-                case 2:
-                    midiFilePlayer.MPTK_MidiName = "F:\Asset\Script\MidiFile\Vocalise1.mid"";
-                    break;
-                case 3:
-                    midiFilePlayer.MPTK_MidiName = "F:\Asset\Script\MidiFile\Vocalise1.mid"";
-                    break;
-                case 4:
-                    midiFilePlayer.MPTK_MidiName = "F:\Asset\Script\MidiFile\Vocalise1.mid";
-                    break;
+                myMidiInOut.UpdatePitchHistory(myMidiInOut.GetCurrentEvent().Value);
+                for (int i = 0; i < pitchDisplayPoints.Length; i++)
+                {
+                    pitchDisplayPoints[i].transform.position = new Vector3(10 + i * 10, 500 + 10 * myMidiInOut.pitchHistory[i], 0);
+                }
+                for (int i = 0; i < pitchDisplayPointsFile.Length; i++)
+                {
+                    pitchDisplayPointsFile[i].transform.position = new Vector3(10 + i * 10, 500 + 10 * myMidiInOut.pitchHistory[i], 0);
+                }
             }
         }
-        if (StartSending() == true)
-            SendEvent(midiEvent);
-    }*/
-
-
+    }
 }
