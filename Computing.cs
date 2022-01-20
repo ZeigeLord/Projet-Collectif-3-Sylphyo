@@ -9,7 +9,7 @@ public class InstrumentData : MonoBehaviour
 {
     public string instrument;
 
-    public InstrumentData();
+    public InstrumentData()
 
     public InstrumentData( string instrumentChosen )
     {
