@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.IO;
 using System.Collections;
 using System.Collections.Generic;
@@ -8,8 +8,8 @@ using UnityEngine;
 public class InstrumentData : MonoBehaviour
 {
     public string instrument;
-    private string dataSeparator = "%SEPARATOR%";
-    private int[128,9] fingeringChart;
+
+    public InstrumentData()
 
     public InstrumentData( string instrumentChosen )
     {
@@ -17,20 +17,28 @@ public class InstrumentData : MonoBehaviour
 
         string dataSeparated = File.ReadAllText( Application.dataPath + "/FingeringCharts/" + instrument + ".txt" );
 
-        string[] data = dataSeparated.Split(new[] { dataSeparator }, System.StringSplitOptions.None);
+        string[] dataLineSeparated = dataSeparated.Split( new[] { lineSeparator }, System.StringSplitOptions.None);
 
-        for ( int i = 0; i < 128; i++ )
+        string[] dataTemp;
+
+        for ( int j = 0; j < 128; j++)
         {
-            for( int j = 0; j < 8; j++ )
-            {
-                fingeringChart[j,i] = data[9*i+j];
-            }
+            dataTemp = dataLineSeparated[j].Split(new[] { columnSeparator }, System.StringSplitOptions.None);
+
+            for (int i = 0; i < 9; i++)
+                fingeringChart[j, i] = int.Parse( dataTemp[i] );            //conversion en int
         }
+                   
     }
 
     public int[] GetFingeringChart()
     {
         fingeringChart;
     }
-}
+
+    private:
+        string lineSeparator = "\n";
+        string columnSeparator = "  ";
+
+        int[128, 9] fingeringChart;
 }
