@@ -9,50 +9,55 @@ public class MidiInOut : MonoBehaviour
     /// Manages MIDI stream
     /// <summary>
 
+
     ////////////////MEMBERS////////////////
 
     public MidiFilePlayer midiFilePlayer;
     public int indexOutput;
     public MPTKEvent inputMidiEvent = null;
-
     public int[] pitchHistory = new int[500];
+
+
     ////////////////METHODS////////////////
 
     // File Playing //
 
     public void SetFile(int exerciceId)
     {
-        switch(exerciceId)
+        switch (exerciceId)
         {
             case 1:
-                midiFilePlayer.MPTK_MidiName = "ex_1_1";
+                midiFilePlayer.MPTK_MidiName = "Exo 1 MIDI";
                 break;
             case 2:
-                midiFilePlayer.MPTK_MidiName = "ex_1_2";
+                midiFilePlayer.MPTK_MidiName = "Exo 2 MIDI";
                 break;
             case 3:
-                midiFilePlayer.MPTK_MidiName = "ex_1_3";
+                midiFilePlayer.MPTK_MidiName = "Octave Ex 1";
                 break;
             case 4:
-                midiFilePlayer.MPTK_MidiName = "ex_1_4";
+                midiFilePlayer.MPTK_MidiName = "Octave Ex 2";
                 break;
             case 5:
-                midiFilePlayer.MPTK_MidiName = "ex_2_1_1";
+                midiFilePlayer.MPTK_MidiName = "Octave Ex3 (chromatique)";
                 break;
             case 6:
-                midiFilePlayer.MPTK_MidiName = "ex_2_1_2";
+                midiFilePlayer.MPTK_MidiName = "intervalles Ex 1";
                 break;
             case 7:
-                midiFilePlayer.MPTK_MidiName = "ex_2_1_3";
+                midiFilePlayer.MPTK_MidiName = "intervalles Ex 2";
                 break;
             case 8:
-                midiFilePlayer.MPTK_MidiName = "ex_2_2_1";
+                midiFilePlayer.MPTK_MidiName = "intervallez Ex 3";
                 break;
             case 9:
-                midiFilePlayer.MPTK_MidiName = "ex_2_2_2";
+                midiFilePlayer.MPTK_MidiName = "intervalles Ex 4";
                 break;
             case 10:
-                midiFilePlayer.MPTK_MidiName = "ex_2_2_3";
+                midiFilePlayer.MPTK_MidiName = "";
+                break;
+            case 11:
+                midiFilePlayer.MPTK_MidiName = "";
                 break;
             default:
                 break;
@@ -74,9 +79,25 @@ public class MidiInOut : MonoBehaviour
         midiFilePlayer.MPTK_Speed += 0.1f;
     }
 
-    public MPTKEvent GetEvent()
+    public MPTKEvent GetCurrentEvent()
     {
         return midiFilePlayer.MPTK_LastEventPlayed;
+    }
+
+    public List<MPTKEvent> GetAllEvents()
+    {
+        return midiFilePlayer.MPTK_ReadMidiEvents();
+    }
+
+    public List<MPTKEvent> GetNoteOnEvents()
+    {
+        List<MPTKEvent> noteOnEvents = new List<MPTKEvent>();
+        foreach(MPTKEvent midiEvent in GetAllEvents())
+        {
+            if (midiEvent.Command == MPTKCommand.NoteOn)
+                noteOnEvents.Add(midiEvent);
+        }
+        return noteOnEvents;
     }
 
 
@@ -90,12 +111,11 @@ public class MidiInOut : MonoBehaviour
         MidiKeyboard.MPTK_SetRealTimeRead();
     }
 
-    void UpdatePitchHistory(int pitch){
-
-        Debug.Log(pitch);
-        for (int i = pitchHistory.Length-1; i > 0; i--)
-        {            
-            pitchHistory[i] = pitchHistory[i-1];
+    public void UpdatePitchHistory(int pitch)
+    {
+        for (int i = pitchHistory.Length - 1; i > 0; i--)
+        {
+            pitchHistory[i] = pitchHistory[i - 1];
         }
         pitchHistory[0] = pitch;
     }
@@ -107,7 +127,7 @@ public class MidiInOut : MonoBehaviour
         {
             UpdatePitchHistory(midiEvent.Value);
         }
-                
+
         if (StartSending() == true)
             SendEvent(midiEvent);
     }
@@ -153,12 +173,8 @@ public class MidiInOut : MonoBehaviour
         else
             Debug.Log("Error : Only 34 sounds available");
     }
-  
-    public void Process()
-    {
-        StartSending();
-    }
-    
+
+
     // Application Processing
 
     private void OnApplicationQuit()
