@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using MidiPlayerTK;
 
 public class GraphicInterface : MonoBehaviour
@@ -12,14 +13,17 @@ public class GraphicInterface : MonoBehaviour
 
     ////////////////MEMBERS////////////////
 
+
     public GameObject pitchDisplayPointPrefab, pitchDisplayPointPrefabFile;
     public GameObject[] pitchDisplayPoints = new GameObject[500];
     public GameObject[] pitchDisplayPointsFile = new GameObject[500];
     public MidiInOut myMidiInOut;
+    public MidiFilePlayer midiFilePlayer;
     private bool pitchDisplay = false;
     private int index = 0;
     private List<MPTKEvent> midiEvents = new List<MPTKEvent>();
     private List<MPTKEvent> noteOnEvents = new List<MPTKEvent>();
+    public Slider sliderIntensite, sliderRoulis, sliderTangage;
 
 
     ////////////////METHODS////////////////
@@ -42,7 +46,7 @@ public class GraphicInterface : MonoBehaviour
         pitchDisplay = true;
         midiEvents = myMidiInOut.GetAllEvents();
         noteOnEvents = myMidiInOut.GetNoteOnEvents();
-        foreach(MPTKEvent midiEvent in noteOnEvents)
+        foreach (MPTKEvent midiEvent in noteOnEvents)
         {
             pitchDisplayPointsFile[index].transform.position = new Vector3(10 + index * 10, 800 + 10 * midiEvent.Value, 0);
             index++;
@@ -65,6 +69,36 @@ public class GraphicInterface : MonoBehaviour
             {
                 pitchDisplayPointsFile[i].transform.Translate(1, 0, 0);
             }
+        }
+
+        ChangeRealValue();
+        ChangeFileValue();
+    }
+    public void ChangeRealValue()
+    {
+        if (myMidiInOut.inputMidiEvent == null)
+        {
+            sliderRoulis.value = 0;
+            Debug.Log("Bonjour <3");
+        }
+        else if (myMidiInOut.inputMidiEvent.Controller == MPTKController.Expression)
+        {
+            sliderRoulis.value = myMidiInOut.inputMidiEvent.Value;
+            Debug.Log(myMidiInOut.inputMidiEvent.Value);
+        }
+    }
+
+    public void ChangeFileValue()
+    {
+        if (myMidiInOut.inputMidiEvent == null)
+        {
+            sliderRoulis.value = 0;
+            Debug.Log("Bonjour <3");
+        }
+        else if (myMidiInOut.inputMidiEvent.Command != MPTKCommand.NoteOff)
+        {
+            myMidiInOut.GetCurrentEvent();
+            Debug.Log(myMidiInOut.inputMidiEvent.Value);
         }
     }
 }
