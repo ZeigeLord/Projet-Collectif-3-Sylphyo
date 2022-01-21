@@ -92,7 +92,7 @@ public class MidiInOut : MonoBehaviour
     public List<MPTKEvent> GetNoteOnEvents()
     {
         List<MPTKEvent> noteOnEvents = new List<MPTKEvent>();
-        foreach(MPTKEvent midiEvent in GetAllEvents())
+        foreach (MPTKEvent midiEvent in GetAllEvents())
         {
             if (midiEvent.Command == MPTKCommand.NoteOn)
                 noteOnEvents.Add(midiEvent);
