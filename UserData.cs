@@ -4,65 +4,37 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-
+[Serializable]
 public class UserData : MonoBehaviour
 {
-    private string path;
-    private string json;
-    public string userName;
-    public bool[] tutorialsFinished;
-    public bool[] exercicesFinished;
-    public float[] highestScores;
+    /// <summary>
+    /// Processes saving and loading data
+    /// <summary>
 
-    [Serializable]
-    public class Data
+
+    ////////////////MEMBERS////////////////
+    
+    public string _userName;
+    public bool[] tutorialsFinished = new bool[30];
+    public bool[] exercicesFinished = new bool[30];
+    public float[] highestScores = new float[30];
+
+
+    ////////////////METHODS////////////////
+
+    public void SetNewData(string userName)
     {
-        public string _userName;
-        public bool[] _tutorialsFinished;
-        public bool[] _exercicesFinished;
-        public float[] _highestScores;
-    }
+        _userName = userName;
+        exercicesFinished[0] = true;
+        tutorialsFinished[0] = true;
+        highestScores[0] = 0;
 
-    public void Save()
-    {
-        Data saveData = new Data();
-        saveData._userName = userName;
-        saveData._tutorialsFinished = tutorialsFinished;
-        saveData._exercicesFinished = exercicesFinished;
-        saveData._highestScores = highestScores;
-
-        path = Application.streamingAssetsPath;
-
-        json = JsonUtility.ToJson(saveData);
-
-        FileStream fileStream = new FileStream(path, FileMode.Create);
-
-        using (StreamWriter writer = new StreamWriter(fileStream))
+        for(int i = 0; i < 30; i++)
         {
-            writer.Write(json);
+            exercicesFinished[i + 1] = false;
+            tutorialsFinished[i + 1] = false;
+            highestScores[i + 1] = 0;
         }
-    }
 
-    public string ConvertData()
-    {
-        string path = Application.streamingAssetsPath;
-
-        using (StreamReader reader = new StreamReader(path))
-        {
-            json = reader.ReadToEnd();
-            return json;
-        }
-    }
-
-    public void Load()
-    {
-        string dataToConvert = ConvertData();
-
-        Data dataToLoad = new Data();
-        dataToLoad = JsonUtility.FromJson<Data>(dataToConvert);
-        //userName = dataToLoad._userName;
-        tutorialsFinished = dataToLoad._tutorialsFinished;
-        exercicesFinished = dataToLoad._exercicesFinished;
-        highestScores = dataToLoad._highestScores;        
     }
 }

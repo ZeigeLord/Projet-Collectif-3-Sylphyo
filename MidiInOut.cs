@@ -16,6 +16,7 @@ public class MidiInOut : MonoBehaviour
     public int indexOutput;
     public MPTKEvent inputMidiEvent = null;
     public int[] pitchHistory = new int[500];
+    public int index;
 
 
     ////////////////METHODS////////////////
@@ -92,12 +93,24 @@ public class MidiInOut : MonoBehaviour
     public List<MPTKEvent> GetNoteOnEvents()
     {
         List<MPTKEvent> noteOnEvents = new List<MPTKEvent>();
-        foreach (MPTKEvent midiEvent in GetAllEvents())
+        foreach(MPTKEvent midiEvent in GetAllEvents())
         {
             if (midiEvent.Command == MPTKCommand.NoteOn)
                 noteOnEvents.Add(midiEvent);
         }
         return noteOnEvents;
+    }
+
+    public MPTKEvent GetEventByIndex()
+    {
+        int counter = 0;
+        foreach (MPTKEvent midiEvent in GetAllEvents())
+        {
+            counter++;
+            if (counter == index)
+                return midiEvent;
+        }
+        return null;
     }
 
 
