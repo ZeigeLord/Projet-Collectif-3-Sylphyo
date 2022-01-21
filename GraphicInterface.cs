@@ -18,6 +18,7 @@ public class GraphicInterface : MonoBehaviour
     public MidiInOut myMidiInOut;
     private bool pitchDisplay = false;
     private int index = 0;
+    private List<MPTKEvent> midiEvents = new List<MPTKEvent>();
     private List<MPTKEvent> noteOnEvents = new List<MPTKEvent>();
 
 
@@ -28,20 +29,24 @@ public class GraphicInterface : MonoBehaviour
         for (int i = 0; i < pitchDisplayPoints.Length; i++)
         {
             pitchDisplayPoints[i] = GameObject.Instantiate(pitchDisplayPointPrefab);
-            pitchDisplayPoints[i].GetComponent<RectTransform>().localPosition = new Vector3(10 + i * 10, 800, 0);
+            //pitchDisplayPoints[i].GetComponent<RectTransform>().localPosition = new Vector3(10 + i * 10, 800, 0);
             pitchDisplayPoints[i].transform.SetParent(transform);
         }
 
         for (int i = 0; i < pitchDisplayPointsFile.Length; i++)
         {
             pitchDisplayPointsFile[i] = GameObject.Instantiate(pitchDisplayPointPrefabFile);
-            pitchDisplayPointsFile[i].GetComponent<RectTransform>().localPosition = new Vector3(10 + i * 10, 800, 0);
+            //pitchDisplayPointsFile[i].GetComponent<RectTransform>().localPosition = new Vector3(10 + i * 10, 800, 0);
             pitchDisplayPointsFile[i].transform.SetParent(transform);
         }
         pitchDisplay = true;
-        
-        
-
+        midiEvents = myMidiInOut.GetAllEvents();
+        noteOnEvents = myMidiInOut.GetNoteOnEvents();
+        foreach(MPTKEvent midiEvent in noteOnEvents)
+        {
+            pitchDisplayPointsFile[index].transform.position = new Vector3(10 + index * 10, 800 + 10 * midiEvent.Value, 0);
+            index++;
+        }
     }
 
     void Update()
@@ -56,33 +61,10 @@ public class GraphicInterface : MonoBehaviour
                     pitchDisplayPoints[i].transform.position = new Vector3(10 + i * 10, 800 + 10 * myMidiInOut.pitchHistory[i], 0);
                 }
             }
-            myMidiInOut.UpdatePitchHistory(myMidiInOut.GetCurrentEvent().Value) ;
             for (int i = 0; i < pitchDisplayPointsFile.Length; i++)
             {
-                pitchDisplayPointsFile[i].transform.position = new Vector3(10 + i * 10, 800 + 10 * myMidiInOut.pitchHistory[i], 0);
+                pitchDisplayPointsFile[i].transform.Translate(1, 0, 0);
             }
         }
     }
 }
-
-
-/*
-void Update()
-{
-    if (pitchDisplay)
-    {
-        if (myMidiInOut.inputMidiEvent != null && myMidiInOut.GetCurrentEvent().Command == MPTKCommand.NoteOn)
-        {
-            myMidiInOut.UpdatePitchHistory(myMidiInOut.GetCurrentEvent().Value);
-            for (int i = 0; i < pitchDisplayPoints.Length; i++)
-            {
-                pitchDisplayPoints[i].transform.position = new Vector3(10 + i * 10, 500 + 10 * myMidiInOut.pitchHistory[i], 0);
-            }
-            for (int i = 0; i < pitchDisplayPointsFile.Length; i++)
-            {
-                pitchDisplayPointsFile[i].transform.position = new Vector3(10 + i * 10, 500 + 10 * myMidiInOut.pitchHistory[i], 0);
-            }
-        }
-    }
-}
-*/
