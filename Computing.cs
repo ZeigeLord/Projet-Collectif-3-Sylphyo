@@ -12,24 +12,98 @@ public class Computing : MonoBehaviour
 
     ////////////////MEMBERS////////////////
 
-    MPTKEvent midiEventCurrent, midiEventRef;
+    //MPTKEvent midiEventCurrent, midiEventRef;
 
     InstrumentData() instrumentData;
     public int[9] fingeringCurrent;
 
+    // FOR ANALYSIS //
+    private int nuanceTolerance, tangageTolerance, roulisTolerance, sliderUpTolerance, sliderMidTolerance, sliderLowTolerance;
+    private int timeBufferSizeInFrames = 12;
+    private int[] timeBuffer = new int[timeBufferSizeInFrames];
+
     ////////////////METHODS////////////////
-     
+
+    public Computing()
+    {
+        nuanceTolerance = ;
+        tangageTolerance = ;
+        roulisTolerance = ;
+        sliderUpTolerance = ;
+        sliderMidTolerance = ;
+        sliderLowTolerance = ;
+    }
+
+    public bool TestingAccuracy( MPTKEvent midiEventCurrent, MPTKEvent midiEventRef )
+    {
+
+        if ( midiEventCurrent.Command == MPTKCommand.ControlChange && midiEventRef.Command == MPTKCommand.ControlChange )
+        {
+
+        }
+    }
+
+    private bool NuanceAccuracy( MPTKEvent midiEventCurrent, MPTKEvent midiEventRef)
+    {
+        if ( midiEventCurrent.Controller == MPTKController.Expression && midiEventRef.Controller == MPTKController.Expression )
+        {
+            if ( Math.Abs( midiEventCurrent.Value - midiEventRef.Value) <= nuanceTolerance )
+                return true;
+            else
+            {
+                return false;
+                Debug.Log(" Attention aux nuances ! ");
+            }
+        }
+    }
+    private bool TangageAccuracy( MPTKEvent midiEventCurrent, MPTKEvent midiEventRef )
+    {
+        if ( midiEventCurrent.Controller == MPTKController. && midiEventRef.Controller == MPTKController. )
+        {
+
+        }
+    }
+
+    private bool RoulisAccuracy( MPTKEvent midiEventCurrent, MPTKEvent midiEventRef )
+    {
+
+    }
+
+    private bool SliderUpAccuracy( MPTKEvent midiEventCurrent, MPTKEvent midiEventRef )
+    {
+
+    }
+
+    private bool SliderMidAccuracy( MPTKEvent midiEventCurrent, MPTKEvent midiEventRef )
+    {
+        if (midiEventCurrent.Controller == MPTKController.Modulation && midiEventRef.Controller == MPTKController.Modulation)
+        {
+            if (Math.Abs(midiEventCurrent.Value - midiEventRef.Value) <= nuanceTolerance)
+                return true;
+            else
+            {
+                return false;
+                Debug.Log(" Attention au Slider du milieu ! ");
+            }
+        }
+    }
+
+    private bool SliderLowAccuracy( MPTKEvent midiEventCurrent, MPTKEvent midiEventRef )
+    {
+
+    }
+
     public bool AccuracyNote( MPTKEvent midiEventCurrent, MPTKEvent midiEventRef, int id )
     {
-        if( midiEventCurrent.Command==MPTKCommand.NoteOn && midiEventRef.Command==MPTKCommand.NoteOn )
+        if( midiEventCurrent.Command == MPTKCommand.NoteOn && midiEventRef.Command==MPTKCommand.NoteOn )
         {
-            if( midiEventCurrent.Value==midiEventRef.Value )
+            if( midiEventCurrent.Value == midiEventRef.Value )
                 return true;
             else
                 return false;
         }
         else
-            if ( IntervalTuto( id ) == true || IntervalExercice( id )==true )
+            if ( IntervalTuto( id ) == true || IntervalExercice( id ) ==true )
                 return true;
             else
                 return false;
@@ -116,7 +190,7 @@ public class Computing : MonoBehaviour
         instrumentData = instrumentDataLoaded;
     }
 
-    public void MidiToFingering( midiEventCurrent ){
+    public void MidiToFingering( MPTKEvent midiEventCurrent ){
         if ( midiEventCurrent.Command == MPTKCommand.NoteOn )
         {
             for ( int i = 0; i < 9; i++ )
