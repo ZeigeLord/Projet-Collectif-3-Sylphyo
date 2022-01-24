@@ -23,8 +23,7 @@ public class GraphicInterface : MonoBehaviour
     private int index = 0;
     private List<MPTKEvent> midiEvents = new List<MPTKEvent>();
     private List<MPTKEvent> noteOnEvents = new List<MPTKEvent>();
-    public Slider sliderIntensite, sliderRoulis, sliderTangage;
-
+    public Slider sliderIntensite, sliderIntensiteRef, sliderRoulis, sliderRoulisRef, sliderTangage;
 
     ////////////////METHODS////////////////
 
@@ -71,34 +70,36 @@ public class GraphicInterface : MonoBehaviour
             }
         }
 
-        ChangeRealValue();
-        ChangeFileValue();
+        ChangeRealValueIntensite();
+        ChangeFileValueIntensite();
     }
-    public void ChangeRealValue()
+    public void ChangeRealValueIntensite()
     {
         if (myMidiInOut.inputMidiEvent == null)
         {
-            sliderRoulis.value = 0;
+            sliderIntensite.value = 0;
             Debug.Log("Bonjour <3");
         }
         else if (myMidiInOut.inputMidiEvent.Controller == MPTKController.Expression)
         {
-            sliderRoulis.value = myMidiInOut.inputMidiEvent.Value;
+            sliderIntensite.value = myMidiInOut.inputMidiEvent.Value;
             Debug.Log(myMidiInOut.inputMidiEvent.Value);
         }
     }
 
-    public void ChangeFileValue()
+    public void ChangeFileValueIntensite()
     {
-        if (myMidiInOut.inputMidiEvent == null)
+        myMidiInOut.SetFile(1);
+        myMidiInOut.PlayFile();
+        if (myMidiInOut.GetCurrentEvent() == null)
         {
-            sliderRoulis.value = 0;
+            sliderIntensiteRef.value = 0;
             Debug.Log("Bonjour <3");
         }
-        else if (myMidiInOut.inputMidiEvent.Command != MPTKCommand.NoteOff)
+        else if (myMidiInOut.GetCurrentEvent().Controller == MPTKController.Expression)
         {
-            myMidiInOut.GetCurrentEvent();
-            Debug.Log(myMidiInOut.inputMidiEvent.Value);
+            sliderIntensiteRef.value = myMidiInOut.GetCurrentEvent().Value;
+            Debug.Log(myMidiInOut.GetCurrentEvent().Value);
         }
     }
 }
