@@ -13,57 +13,70 @@ public class GraphicInterface : MonoBehaviour
 
     ////////////////MEMBERS////////////////
 
-
     public GameObject pitchDisplayPointPrefab, pitchDisplayPointPrefabFile;
     public GameObject[] pitchDisplayPoints = new GameObject[500];
     public GameObject[] pitchDisplayPointsFile = new GameObject[500];
     public MidiInOut myMidiInOut;
     private bool pitchDisplay = false;
-    private int index = 0;
-    private List<MPTKEvent> midiEvents = new List<MPTKEvent>();
-    private List<MPTKEvent> noteOnEvents = new List<MPTKEvent>();
+    private bool scoreScroll = false;
+    public GameObject score;
+    public GameObject scoreBarPositions;
+    GameObject[] barPositionObjects;
+    float[] barRelativePositionX;
+    float scoreInitialPosX, scoreInitialPosY;
+
     public Slider sliderIntensite, sliderIntensiteRef, sliderTangage, sliderTangageRef;
-    
+
     //Curved slider 
     public Image bar, barRef;
     public RectTransform buttonRef;
     public float valueBar = 0;
     public float valueBarRef = 0;
 
-    ////////////////METHODS////////////////
 
-    void Start()
-    {
-        myMidiInOut.StartReading();
-    }
+    ////////////////METHODS////////////////
 
     public void StartPitchDisplay()
     {
         for (int i = 0; i < pitchDisplayPoints.Length; i++)
         {
             pitchDisplayPoints[i] = GameObject.Instantiate(pitchDisplayPointPrefab);
-            //pitchDisplayPoints[i].GetComponent<RectTransform>().localPosition = new Vector3(10 + i * 10, 800, 0);
             pitchDisplayPoints[i].transform.SetParent(transform);
         }
 
         for (int i = 0; i < pitchDisplayPointsFile.Length; i++)
         {
             pitchDisplayPointsFile[i] = GameObject.Instantiate(pitchDisplayPointPrefabFile);
-            //pitchDisplayPointsFile[i].GetComponent<RectTransform>().localPosition = new Vector3(10 + i * 10, 800, 0);
             pitchDisplayPointsFile[i].transform.SetParent(transform);
         }
         pitchDisplay = true;
-        midiEvents = myMidiInOut.GetAllEvents();
-        noteOnEvents = myMidiInOut.GetNoteOnEvents();
-        foreach (MPTKEvent midiEvent in noteOnEvents)
+    }
+
+    public void StartScoreScrolling()
+    {
+        barPositionObjects = new GameObject[scoreBarPositions.transform.childCount];
+        for (int i = 0; i < barPositionObjects.Length; i++)
         {
-            pitchDisplayPointsFile[index].transform.position = new Vector3(10 + index * 10, 800 + 10 * midiEvent.Value, 0);
-            index++;
+            barPositionObjects[i] = scoreBarPositions.transform.GetChild(i).gameObject;
         }
+
+        barRelativePositionX = new float[scoreBarPositions.transform.childCount];
+        for (int i = 0; i < barPositionObjects.Length; i++)
+        {
+            barRelativePositionX[i] = barPositionObjects[i].transform.position.x
+                - barPositionObjects[0].transform.position.x;
+        }
+
+        scoreInitialPosX = score.transform.position.x;
+        scoreInitialPosY = score.transform.position.y;
+
+        scoreScroll = true;
     }
 
     void Update()
     {
+        // Pitch Displaying
+
         if (pitchDisplay)
         {
             if (myMidiInOut.inputMidiEvent != null && myMidiInOut.inputMidiEvent.Command == MPTKCommand.NoteOn)
@@ -76,9 +89,14 @@ public class GraphicInterface : MonoBehaviour
             }
             for (int i = 0; i < pitchDisplayPointsFile.Length; i++)
             {
-                pitchDisplayPointsFile[i].transform.Translate(1, 0, 0);
+                pitchDisplayPoints[i].transform.position = new Vector3(10 + i * 10, 800 + 10 * myMidiInOut.filePitchHistory[i], 0);
             }
         }
+
+        //Score Scrolling
+
+        if(scoreScroll)
+            score.transform.position = new Vector3(scoreInitialPosX - barRelativePositionX[myMidiInOut.indexDistance], scoreInitialPosY, 0);
 
         ChangeRealValueRoulis();
         ChangeFileValueRoulis();
@@ -92,7 +110,7 @@ public class GraphicInterface : MonoBehaviour
     {
         float amount = (barValue / 100.0f) * 180.0f / 360;
         bar.fillAmount = amount;
-        float buttonAngle = amount * 360;    
+        float buttonAngle = amount * 360;
     }
     public void BarChangeRef(float barValue)
     {
@@ -102,7 +120,7 @@ public class GraphicInterface : MonoBehaviour
         buttonRef.localEulerAngles = new Vector3(0, 0, -buttonAngle);
     }
     public void ChangeRealValueRoulis()
-      {
+    {
         BarChange(valueBar);
         if (myMidiInOut.inputMidiEvent == null)
         {
@@ -176,19 +194,18 @@ public class GraphicInterface : MonoBehaviour
     }
 
     public void ChangeFileValueTangage()
-     {
-         myMidiInOut.SetFile(1);
-         myMidiInOut.PlayFile();
-         if (myMidiInOut.GetCurrentEvent() == null)
-         {
-             sliderIntensiteRef.value = 0;
-             Debug.Log("Tangage du fichier nul");
-         }
-         else if (myMidiInOut.GetCurrentEvent().Controller == MPTKController.SOUND_CTRL6)
-         {
-             sliderIntensiteRef.value = myMidiInOut.GetCurrentEvent().Value;
-             Debug.Log(myMidiInOut.GetCurrentEvent().Value);
-         }
-     }
-
+    {
+        myMidiInOut.SetFile(1);
+        myMidiInOut.PlayFile();
+        if (myMidiInOut.GetCurrentEvent() == null)
+        {
+            sliderIntensiteRef.value = 0;
+            Debug.Log("Tangage du fichier nul");
+        }
+        else if (myMidiInOut.GetCurrentEvent().Controller == MPTKController.SOUND_CTRL6)
+        {
+            sliderIntensiteRef.value = myMidiInOut.GetCurrentEvent().Value;
+            Debug.Log(myMidiInOut.GetCurrentEvent().Value);
+        }
+    }
 }
