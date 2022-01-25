@@ -15,8 +15,10 @@ public class MidiInOut : MonoBehaviour
     public MidiFilePlayer midiFilePlayer;
     public int indexOutput;
     public MPTKEvent inputMidiEvent = null;
+    public MPTKEvent inputMidiFileEvent = null;
     public int[] pitchHistory = new int[500];
-    public int index;
+    public int[] filePitchHistory = new int[500];
+    public int indexDistance;
 
 
     ////////////////METHODS////////////////
@@ -63,6 +65,8 @@ public class MidiInOut : MonoBehaviour
             default:
                 break;
         }
+        midiFilePlayer.OnEventEndPlayMidi.AddListener(EndPlay);
+        midiFilePlayer.OnEventNotesMidi.AddListener(MidiReadEvents);
     }
 
     public void PlayFile()
@@ -93,7 +97,7 @@ public class MidiInOut : MonoBehaviour
     public List<MPTKEvent> GetNoteOnEvents()
     {
         List<MPTKEvent> noteOnEvents = new List<MPTKEvent>();
-        foreach(MPTKEvent midiEvent in GetAllEvents())
+        foreach (MPTKEvent midiEvent in GetAllEvents())
         {
             if (midiEvent.Command == MPTKCommand.NoteOn)
                 noteOnEvents.Add(midiEvent);
@@ -101,16 +105,32 @@ public class MidiInOut : MonoBehaviour
         return noteOnEvents;
     }
 
-    public MPTKEvent GetEventByIndex()
+    public void UpdateFilePitchHistory(int pitch)
     {
-        int counter = 0;
-        foreach (MPTKEvent midiEvent in GetAllEvents())
+        for (int i = filePitchHistory.Length - 1; i > 0; i--)
         {
-            counter++;
-            if (counter == index)
-                return midiEvent;
+            filePitchHistory[i] = filePitchHistory[i - 1];
         }
-        return null;
+        filePitchHistory[0] = pitch;
+    }
+
+    public void MidiReadEvents(List<MPTKEvent> events)
+    {
+        foreach (MPTKEvent midiEvent in events)
+        {
+            if (midiEvent.Command == MPTKCommand.NoteOn)
+                UpdateFilePitchHistory(midiEvent.Value);
+        }
+
+        if (midiFilePlayer.MPTK_DeltaTicksPerQuarterNote != 0)
+        {
+            indexDistance = (int)midiFilePlayer.MPTK_TickCurrent / (3 * midiFilePlayer.MPTK_DeltaTicksPerQuarterNote);
+        }
+    }
+
+    public void EndPlay(string midiname, EventEndMidiEnum reason)
+    {
+        Debug.LogFormat("End playing {0} reason:{1}", midiname, reason);
     }
 
 
