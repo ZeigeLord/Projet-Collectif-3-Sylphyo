@@ -8,7 +8,7 @@ public class GraphicInterface : MonoBehaviour
 {
     /// <summary>
     /// Manages GUI
-    /// <summary>
+    /// </summary>
 
 
     ////////////////MEMBERS////////////////
@@ -17,13 +17,14 @@ public class GraphicInterface : MonoBehaviour
     public GameObject[] pitchDisplayPoints = new GameObject[500];
     public GameObject[] pitchDisplayPointsFile = new GameObject[500];
     public MidiInOut myMidiInOut;
-    private bool pitchDisplay = false;
-    private bool scoreScroll = false;
     public GameObject score;
     public GameObject scoreBarPositions;
-    GameObject[] barPositionObjects;
-    float[] barRelativePositionX;
-    float scoreInitialPosX, scoreInitialPosY;
+    private GameObject[] barPositionObjects;
+    private Text timerTextField;
+    private float[] barRelativePositionX;
+    private float scoreInitialPosX, scoreInitialPosY;
+    private bool pitchDisplay = false;
+    private bool scoreScroll = false;
 
     public Slider sliderIntensite, sliderIntensiteRef, sliderTangage, sliderTangageRef;
 
@@ -35,6 +36,11 @@ public class GraphicInterface : MonoBehaviour
 
 
     ////////////////METHODS////////////////
+    
+    public void StartTimerDisplaying()
+    {
+        
+    }
 
     public void StartPitchDisplay()
     {
@@ -89,16 +95,21 @@ public class GraphicInterface : MonoBehaviour
             }
             for (int i = 0; i < pitchDisplayPointsFile.Length; i++)
             {
-                pitchDisplayPoints[i].transform.position = new Vector3(10 + i * 10, 800 + 10 * myMidiInOut.filePitchHistory[i], 0);
+                pitchDisplayPointsFile[i].transform.position = new Vector3(10 + i * 10, 800 + 10 * myMidiInOut.filePitchHistory[i], 0);
             }
         }
 
         //Score Scrolling
 
-        if(scoreScroll)
-            score.transform.position = new Vector3(scoreInitialPosX - barRelativePositionX[myMidiInOut.indexDistance], scoreInitialPosY, 0);
+        if (scoreScroll)
+            if (myMidiInOut.indexDistance < barRelativePositionX.Length)
+                score.transform.position = new Vector3(scoreInitialPosX - barRelativePositionX[myMidiInOut.indexDistance], scoreInitialPosY, 0);
+            else scoreScroll = false;
+    }
 
-        ChangeRealValueRoulis();
+        // Sliders updating
+
+        /*ChangeRealValueRoulis();
         ChangeFileValueRoulis();
         ChangeRealValueIntensite();
         ChangeFileValueIntensite();
@@ -208,4 +219,5 @@ public class GraphicInterface : MonoBehaviour
             Debug.Log(myMidiInOut.GetCurrentEvent().Value);
         }
     }
+        */
 }

@@ -7,29 +7,34 @@ public class Exercice : MonoBehaviour
 {
     /// <summary>
     /// Processes an exercice
-    /// <summary>
+    /// </summary>
 
     ////////////////MEMBERS////////////////
     
     public MidiInOut myMidiInOut;
     public Computing myComputing;
-    public GraphicInterface myGrapicInterface;
+    public GraphicInterface myGraphicInterface;
     public UserData myUserData;
     public List<MPTKEvent> eventsList;
     public int exerciceId;
     public float score = 0;
+    public float scoreMin;
     public float highestScore;
     public bool isFinished;
     private bool playing = false;
-    private int regulator = 0;
+    private float timer = 3;
+    private bool counting = false;
 
 
     ////////////////METHODS////////////////
 
     // GraphicInterface Communication
 
-
-
+    public void SetGraphicInterface()
+    {
+        myGraphicInterface.StartPitchDisplay();
+        myGraphicInterface.StartScoreScrolling();
+    }
 
 
     // MidiInOut Communication
@@ -37,6 +42,7 @@ public class Exercice : MonoBehaviour
     public void SetMidiStream()
     {
         myMidiInOut.SetFile(exerciceId);
+        myMidiInOut.PlayFile();
         eventsList = myMidiInOut.GetAllEvents();
         myMidiInOut.StartReading();
         //myMidiInOut.StartSending();
@@ -48,11 +54,6 @@ public class Exercice : MonoBehaviour
         myMidiInOut.StopSending();
     }
 
-    public void StartBackingTrack()
-    {
-        myMidiInOut.PlayFile();
-    }
-
 
     // Computing Communication
 
@@ -61,6 +62,17 @@ public class Exercice : MonoBehaviour
         return myComputing.accuracy_note(playingEvent, refEvent, id);
     }
 
+    public void CheckSuccess(float score, float scoreMin)
+    {
+        if (myComputing.score(score, scoreMin))
+            isFinished = true;
+    }
+
+    public void CheckHighScore(float score, float scoreMax)
+    {
+        if (myComputing.meilleur_score(score, scoreMax))
+            highestScore = score;
+    }
 
 
     // UserData Communication
@@ -77,7 +89,7 @@ public class Exercice : MonoBehaviour
 
     public void SetHighestScore()
     {
-        myUserData.highestScores[exerciceId] = score;
+        myUserData.highestScores[exerciceId] = highestScore;
     }
     
     public void SetFinished()
@@ -87,38 +99,59 @@ public class Exercice : MonoBehaviour
 
 
     // Processing
+    
+    public void StartTimer()
+    {
+        counting = true;
+    }
 
     public void Process()
     {
-        isFinished = GetIsFinished();
-        highestScore = GetHighestScore();
-        //SetGraphicInterface
+        //isFinished = GetIsFinished();
+        //highestScore = GetHighestScore();
         SetMidiStream();
-        StartBackingTrack();
+        SetGraphicInterface();
         playing = true;
     }
 
+    public void EndOfExercice()
+    {
+        CheckSuccess(score, scoreMin);
+        CheckHighScore(score, highestScore);
+        SetFinished();
+        SetHighestScore();
+        CloseMidiStream();
+    }
+
+
     void Update()
     {
+        if (counting)
+        {
+            if (timer <= 0)
+            {
+                counting = false;
+                Process();
+            }
+            else
+                timer -= Time.deltaTime;
+        }
+
         if (playing)
         {   if (myMidiInOut.midiFilePlayer.MPTK_TickCurrent != myMidiInOut.midiFilePlayer.MPTK_TickLast)
             {
-                if (regulator % 25 == 0)
-                {
-                    regulator = 0;
-                    if (Checking(myMidiInOut.inputMidiEvent, myMidiInOut.GetCurrentEvent(), exerciceId))
-                        score++;
-                    //update graphic
-                }
+                //if (Checking(myMidiInOut.inputMidiEvent, myMidiInOut.GetCurrentEvent(), exerciceId))
+                    //score++;
+                //update graphic
             }
             else
             {
-                if (Checking(myMidiInOut.inputMidiEvent, myMidiInOut.GetCurrentEvent(), exerciceId))
-                    score++;
+                //if (Checking(myMidiInOut.inputMidiEvent, myMidiInOut.GetCurrentEvent(), exerciceId))
+                    //score++;
                 //update graphic
                 playing = false;
+                EndOfExercice();
             }
-            regulator++;
         }
     }
 }
