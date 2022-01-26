@@ -21,7 +21,6 @@ public class GraphicInterface : MonoBehaviour
     public GameObject score;
     public GameObject scoreBarPositions;
     private GameObject[] barPositionObjects;
-    //private Text timerTextField;
     private float[] barRelativePositionX;
     private float scoreInitialPosX, scoreInitialPosY;
     private bool pitchDisplay = false;
@@ -38,11 +37,9 @@ public class GraphicInterface : MonoBehaviour
     //----- Timer -----
     public Text countdownText;
 
-    void Start()
-    {
-        myMidiInOut.StartReading();
-    }
+
     ////////////////METHODS////////////////
+    
     public void StartTimerDisplaying(float currentTime)
     {
         countdownText.text = currentTime.ToString();
