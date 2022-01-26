@@ -49,13 +49,18 @@ public static class UserDataManager
         _userDataArray = JsonUtility.FromJson<List<UserData>>(dataToConvert);
     }
 
-    public static void Add(UserData data)
+    public static void Add(UserData dataToAdd)
     {
         foreach (UserData checking in _userDataArray)
         {
-            if (data._userName == checking._userName)
+            if (dataToAdd._userName == checking._userName)
                 break;
-        }
-        _userDataArray.Add(data);
+        }    
+        _userDataArray.Add(dataToAdd);
+    }
+
+    public static List<UserData> GetUserDataArray()
+    {
+        return _userDataArray;
     }
 }
