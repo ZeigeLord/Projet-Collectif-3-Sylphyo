@@ -123,6 +123,7 @@ public class Exercice : MonoBehaviour
         SetFinished();
         SetHighestScore();
         CloseMidiStream();
+        UserDataManager.Save();
     }
 
 
