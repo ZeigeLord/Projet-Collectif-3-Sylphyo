@@ -103,6 +103,8 @@ public class GraphicInterface : MonoBehaviour
                     pitchDisplayPoints[i].transform.position = new Vector3(10 + i * 10, 800 + 10 * myMidiInOut.pitchHistory[i], 0);
                 }
             }
+            
+            myMidiInOut.UpdateFilePitchHistory(myMidiInOut.GetCurrentEvent().Value);
             for (int i = 0; i < pitchDisplayPointsFile.Length; i++)
             {
                 pitchDisplayPointsFile[i].transform.position = new Vector3(10 + i * 10, 800 + 10 * myMidiInOut.filePitchHistory[i], 0);
