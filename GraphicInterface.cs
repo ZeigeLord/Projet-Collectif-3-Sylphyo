@@ -17,16 +17,17 @@ public class GraphicInterface : MonoBehaviour
     public GameObject[] pitchDisplayPoints = new GameObject[500];
     public GameObject[] pitchDisplayPointsFile = new GameObject[500];
     public MidiInOut myMidiInOut;
+    public MPTKEvent midiEvent;
     public GameObject score;
     public GameObject scoreBarPositions;
     private GameObject[] barPositionObjects;
-    private Text timerTextField;
+    //private Text timerTextField;
     private float[] barRelativePositionX;
     private float scoreInitialPosX, scoreInitialPosY;
     private bool pitchDisplay = false;
     private bool scoreScroll = false;
-
     public Slider sliderIntensite, sliderIntensiteRef, sliderTangage, sliderTangageRef;
+    public Text nameNote;
 
     //Curved slider 
     public Image bar, barRef;
@@ -34,12 +35,20 @@ public class GraphicInterface : MonoBehaviour
     public float valueBar = 0;
     public float valueBarRef = 0;
 
+    //----- Timer -----
+    public Text countdownText;
 
-    ////////////////METHODS////////////////
-    
-    public void StartTimerDisplaying()
+    void Start()
     {
-        
+        myMidiInOut.StartReading();
+    }
+    ////////////////METHODS////////////////
+    public void StartTimerDisplaying(float currentTime)
+    {
+        countdownText.text = currentTime.ToString();
+
+        //countdownText.color = Color.
+
     }
 
     public void StartPitchDisplay()
@@ -79,6 +88,7 @@ public class GraphicInterface : MonoBehaviour
         scoreScroll = true;
     }
 
+    //myMidiInOut.inputMidiEvent.inde -> nom des notes
     void Update()
     {
         // Pitch Displaying
@@ -105,16 +115,27 @@ public class GraphicInterface : MonoBehaviour
             if (myMidiInOut.indexDistance < barRelativePositionX.Length)
                 score.transform.position = new Vector3(scoreInitialPosX - barRelativePositionX[myMidiInOut.indexDistance], scoreInitialPosY, 0);
             else scoreScroll = false;
-    }
-
+        /*
         // Sliders updating
-
-        /*ChangeRealValueRoulis();
+        ChangeRealValueRoulis();
         ChangeFileValueRoulis();
         ChangeRealValueIntensite();
         ChangeFileValueIntensite();
         ChangeRealValueTangage();
         ChangeFileValueTangage();
+        */
+        NameNote();
+    }
+
+    public void NameNote()
+    {
+
+        if (myMidiInOut.inputMidiEvent.Command == MPTKCommand.NoteOn)
+        {
+            nameNote.text = MidiPlayerTK.HelperNoteLabel.LabelFromMidi(myMidiInOut.inputMidiEvent.Value);
+        }
+        else
+            Debug.Log("Ce n'est pas une note");
     }
 
     public void BarChange(float barValue)
@@ -144,7 +165,6 @@ public class GraphicInterface : MonoBehaviour
             Debug.Log(myMidiInOut.inputMidiEvent.Value);
         }
     }
-
     public void ChangeFileValueRoulis()
     {
         myMidiInOut.SetFile(1);
@@ -161,7 +181,6 @@ public class GraphicInterface : MonoBehaviour
             Debug.Log(myMidiInOut.GetCurrentEvent().Value);
         }
     }
-
     public void ChangeRealValueIntensite()
     {
         if (myMidiInOut.inputMidiEvent == null)
@@ -203,7 +222,6 @@ public class GraphicInterface : MonoBehaviour
             Debug.Log(myMidiInOut.inputMidiEvent.Value);
         }
     }
-
     public void ChangeFileValueTangage()
     {
         myMidiInOut.SetFile(1);
@@ -219,5 +237,4 @@ public class GraphicInterface : MonoBehaviour
             Debug.Log(myMidiInOut.GetCurrentEvent().Value);
         }
     }
-        */
 }

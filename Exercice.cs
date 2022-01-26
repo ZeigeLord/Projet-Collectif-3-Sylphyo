@@ -1,4 +1,5 @@
 using System.Collections;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using MidiPlayerTK;
@@ -10,7 +11,7 @@ public class Exercice : MonoBehaviour
     /// </summary>
 
     ////////////////MEMBERS////////////////
-    
+
     public MidiInOut myMidiInOut;
     public Computing myComputing;
     public GraphicInterface myGraphicInterface;
@@ -22,8 +23,9 @@ public class Exercice : MonoBehaviour
     public float highestScore;
     public bool isFinished;
     private bool playing = false;
-    private float timer = 3;
+    private float timer = 4;
     private bool counting = false;
+    private int counTimer;
 
 
     ////////////////METHODS////////////////
@@ -38,7 +40,7 @@ public class Exercice : MonoBehaviour
 
 
     // MidiInOut Communication
-    
+
     public void SetMidiStream()
     {
         myMidiInOut.SetFile(exerciceId);
@@ -91,7 +93,7 @@ public class Exercice : MonoBehaviour
     {
         myUserData.highestScores[exerciceId] = highestScore;
     }
-    
+
     public void SetFinished()
     {
         myUserData.exercicesFinished[exerciceId] = isFinished;
@@ -99,7 +101,7 @@ public class Exercice : MonoBehaviour
 
 
     // Processing
-    
+
     public void StartTimer()
     {
         counting = true;
@@ -135,23 +137,26 @@ public class Exercice : MonoBehaviour
             }
             else
                 timer -= Time.deltaTime;
+                counTimer = (int)timer;
         }
 
         if (playing)
-        {   if (myMidiInOut.midiFilePlayer.MPTK_TickCurrent != myMidiInOut.midiFilePlayer.MPTK_TickLast)
+        {
+            if (myMidiInOut.midiFilePlayer.MPTK_TickCurrent != myMidiInOut.midiFilePlayer.MPTK_TickLast)
             {
                 //if (Checking(myMidiInOut.inputMidiEvent, myMidiInOut.GetCurrentEvent(), exerciceId))
-                    //score++;
+                //score++;
                 //update graphic
             }
             else
             {
                 //if (Checking(myMidiInOut.inputMidiEvent, myMidiInOut.GetCurrentEvent(), exerciceId))
-                    //score++;
+                //score++;
                 //update graphic
                 playing = false;
                 EndOfExercice();
             }
         }
+        myGraphicInterface.StartTimerDisplaying(counTimer);
     }
 }
