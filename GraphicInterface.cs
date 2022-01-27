@@ -21,6 +21,7 @@ public class GraphicInterface : MonoBehaviour
     public GameObject score;
     public GameObject scoreBarPositions;
     private GameObject[] barPositionObjects;
+    //private Text timerTextField;
     private float[] barRelativePositionX;
     private float scoreInitialPosX, scoreInitialPosY;
     private bool pitchDisplay = false;
@@ -36,14 +37,32 @@ public class GraphicInterface : MonoBehaviour
 
     //----- Timer -----
     public Text countdownText;
+    public float timer = 4;
+    float currentTime = 0f;
+    float startingTime = 4f;
 
-
-    ////////////////METHODS////////////////
-    
-    public void StartTimerDisplaying(float currentTime)
+    void Start()
     {
-        countdownText.text = currentTime.ToString();
+        myMidiInOut.StartReading();
+        currentTime = startingTime;
+        StartPitchDisplay();
+    }
+    private int counTimer;
+    ////////////////METHODS////////////////
+    public void StartTimerDisplaying()
+    {
+        if (timer <= 0)
+        {
+            currentTime = 0;
+            countdownText.text = " ";
+        }
+        else
+        {
+            timer -= Time.deltaTime;
+            countdownText.text = currentTime.ToString("0");
 
+            // = (int)timer;
+        }
         //countdownText.color = Color.
 
     }
@@ -100,8 +119,6 @@ public class GraphicInterface : MonoBehaviour
                     pitchDisplayPoints[i].transform.position = new Vector3(10 + i * 10, 800 + 10 * myMidiInOut.pitchHistory[i], 0);
                 }
             }
-            
-            myMidiInOut.UpdateFilePitchHistory(myMidiInOut.GetCurrentEvent().Value);
             for (int i = 0; i < pitchDisplayPointsFile.Length; i++)
             {
                 pitchDisplayPointsFile[i].transform.position = new Vector3(10 + i * 10, 800 + 10 * myMidiInOut.filePitchHistory[i], 0);
@@ -114,7 +131,7 @@ public class GraphicInterface : MonoBehaviour
             if (myMidiInOut.indexDistance < barRelativePositionX.Length)
                 score.transform.position = new Vector3(scoreInitialPosX - barRelativePositionX[myMidiInOut.indexDistance], scoreInitialPosY, 0);
             else scoreScroll = false;
-        /*
+        
         // Sliders updating
         ChangeRealValueRoulis();
         ChangeFileValueRoulis();
@@ -122,7 +139,8 @@ public class GraphicInterface : MonoBehaviour
         ChangeFileValueIntensite();
         ChangeRealValueTangage();
         ChangeFileValueTangage();
-        */
+
+        StartTimerDisplaying();        
         NameNote();
     }
 
@@ -208,31 +226,62 @@ public class GraphicInterface : MonoBehaviour
             Debug.Log(myMidiInOut.GetCurrentEvent().Value);
         }
     }
+    /* public void ChangeRealValueTangage()
+     {
+         if (myMidiInOut.inputMidiEvent == null)
+         {
+             sliderIntensite.value = 0;
+             Debug.Log("Tangage nul");
+         }
+         else if (myMidiInOut.inputMidiEvent.Controller == MPTKController.SOUND_CTRL6)
+         {
+             sliderIntensite.value = myMidiInOut.inputMidiEvent.Value;
+             Debug.Log(myMidiInOut.inputMidiEvent.Value);
+         }
+     }*/
+
+
     public void ChangeRealValueTangage()
     {
         if (myMidiInOut.inputMidiEvent == null)
         {
-            sliderIntensite.value = 0;
+            sliderTangage.value = 0;
             Debug.Log("Tangage nul");
         }
-        else if (myMidiInOut.inputMidiEvent.Controller == MPTKController.SOUND_CTRL6)
+        else if (myMidiInOut.inputMidiEvent.Command == MPTKCommand.NoteOn)
         {
-            sliderIntensite.value = myMidiInOut.inputMidiEvent.Value;
+            sliderTangage.value = myMidiInOut.inputMidiEvent.Value;
             Debug.Log(myMidiInOut.inputMidiEvent.Value);
         }
     }
+
+    /*public void ChangeFileValueTangage()
+    {
+        myMidiInOut.SetFile(1);
+        myMidiInOut.PlayFile();
+        if (myMidiInOut.GetCurrentEvent() == null)
+        {
+            sliderTangageRef.value = 0;
+            Debug.Log("Tangage du fichier nul");
+        }
+        else if (myMidiInOut.GetCurrentEvent().Controller == MPTKController.SOUND_CTRL6)
+        {
+            sliderTangageRef.value = myMidiInOut.GetCurrentEvent().Value;
+            Debug.Log(myMidiInOut.GetCurrentEvent().Value);
+        }
+    }*/
     public void ChangeFileValueTangage()
     {
         myMidiInOut.SetFile(1);
         myMidiInOut.PlayFile();
         if (myMidiInOut.GetCurrentEvent() == null)
         {
-            sliderIntensiteRef.value = 0;
+            sliderTangageRef.value = 0;
             Debug.Log("Tangage du fichier nul");
         }
-        else if (myMidiInOut.GetCurrentEvent().Controller == MPTKController.SOUND_CTRL6)
+        else if (myMidiInOut.GetCurrentEvent().Command == MPTKCommand.NoteOn)
         {
-            sliderIntensiteRef.value = myMidiInOut.GetCurrentEvent().Value;
+            sliderTangageRef.value = myMidiInOut.GetCurrentEvent().Value;
             Debug.Log(myMidiInOut.GetCurrentEvent().Value);
         }
     }
