@@ -37,29 +37,28 @@ public class GraphicInterface : MonoBehaviour
 
     //----- Timer -----
     public Text countdownText;
-    public float timer = 4;
-    float currentTime = 0f;
-    float startingTime = 4f;
+    //float currentTime = 0f;
+    //float startingTime = 4f;
 
     void Start()
     {
         myMidiInOut.StartReading();
-        currentTime = startingTime;
+        //currentTime = startingTime;
         StartPitchDisplay();
     }
-    private int counTimer;
     ////////////////METHODS////////////////
-    public void StartTimerDisplaying()
+    public void StartTimerDisplaying(int countTimer)
     {
-        if (timer <= 0)
+        if (countTimer <= 0)
         {
-            currentTime = 0;
+            countTimer = 0;
             countdownText.text = " ";
         }
         else
         {
-            timer -= Time.deltaTime;
-            countdownText.text = currentTime.ToString("0");
+            //currentTime -= Time.deltaTime;
+            //countTimer = (int)currentTime;
+            countdownText.text = countTimer.ToString();
 
             // = (int)timer;
         }
@@ -139,8 +138,7 @@ public class GraphicInterface : MonoBehaviour
         ChangeFileValueIntensite();
         ChangeRealValueTangage();
         ChangeFileValueTangage();
-
-        StartTimerDisplaying();        
+      
         NameNote();
     }
 
@@ -226,36 +224,21 @@ public class GraphicInterface : MonoBehaviour
             Debug.Log(myMidiInOut.GetCurrentEvent().Value);
         }
     }
-    /* public void ChangeRealValueTangage()
+    public void ChangeRealValueTangage()
      {
          if (myMidiInOut.inputMidiEvent == null)
          {
-             sliderIntensite.value = 0;
+             sliderTangage.value = 0;
              Debug.Log("Tangage nul");
          }
          else if (myMidiInOut.inputMidiEvent.Controller == MPTKController.SOUND_CTRL6)
          {
-             sliderIntensite.value = myMidiInOut.inputMidiEvent.Value;
+             sliderTangage.value = myMidiInOut.inputMidiEvent.Value;
              Debug.Log(myMidiInOut.inputMidiEvent.Value);
          }
-     }*/
+     }
 
-
-    public void ChangeRealValueTangage()
-    {
-        if (myMidiInOut.inputMidiEvent == null)
-        {
-            sliderTangage.value = 0;
-            Debug.Log("Tangage nul");
-        }
-        else if (myMidiInOut.inputMidiEvent.Command == MPTKCommand.NoteOn)
-        {
-            sliderTangage.value = myMidiInOut.inputMidiEvent.Value;
-            Debug.Log(myMidiInOut.inputMidiEvent.Value);
-        }
-    }
-
-    /*public void ChangeFileValueTangage()
+    public void ChangeFileValueTangage()
     {
         myMidiInOut.SetFile(1);
         myMidiInOut.PlayFile();
@@ -269,20 +252,6 @@ public class GraphicInterface : MonoBehaviour
             sliderTangageRef.value = myMidiInOut.GetCurrentEvent().Value;
             Debug.Log(myMidiInOut.GetCurrentEvent().Value);
         }
-    }*/
-    public void ChangeFileValueTangage()
-    {
-        myMidiInOut.SetFile(1);
-        myMidiInOut.PlayFile();
-        if (myMidiInOut.GetCurrentEvent() == null)
-        {
-            sliderTangageRef.value = 0;
-            Debug.Log("Tangage du fichier nul");
-        }
-        else if (myMidiInOut.GetCurrentEvent().Command == MPTKCommand.NoteOn)
-        {
-            sliderTangageRef.value = myMidiInOut.GetCurrentEvent().Value;
-            Debug.Log(myMidiInOut.GetCurrentEvent().Value);
-        }
     }
+
 }

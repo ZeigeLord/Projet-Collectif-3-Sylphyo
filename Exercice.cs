@@ -2,6 +2,7 @@ using System.Collections;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using MidiPlayerTK;
 
 public class Exercice : MonoBehaviour
@@ -26,8 +27,8 @@ public class Exercice : MonoBehaviour
     private float timer = 4;
     private bool counting = false;
     private int counTimer;
-
-
+    private bool timerActive = false;
+ 
     ////////////////METHODS////////////////
 
     // GraphicInterface Communication
@@ -123,22 +124,23 @@ public class Exercice : MonoBehaviour
         SetFinished();
         SetHighestScore();
         CloseMidiStream();
-        UserDataManager.Save();
     }
-
-
     void Update()
     {
         if (counting)
         {
             if (timer <= 0)
             {
+                //timer = 0;
+                //countdownText.text = " ";
                 counting = false;
                 Process();
             }
             else
                 timer -= Time.deltaTime;
                 counTimer = (int)timer;
+                //countdownText.text = counTimer.ToString();
+
         }
 
         if (playing)
