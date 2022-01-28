@@ -12,8 +12,9 @@ public class Computing : MonoBehaviour
 
 
     ////////////////MEMBERS////////////////
-
     // FOR ANALYSIS //
+    private float userScore, maxPotentialScore;
+    // STATIC //
     private int nuanceTolerance, tangageTolerance, roulisTolerance, sliderUpTolerance, sliderMidTolerance, sliderLowTolerance;
     private int timeBufferSizeInFrames = 12;
 
@@ -21,6 +22,9 @@ public class Computing : MonoBehaviour
 
     public Computing(int nuanceWind, int tangageWind, int roulisWind, int sliderUpWind, int sliderMidWind, int sliderLowWind)
     {
+        userScore = 0f;
+        maxPotentialScore = 0f;
+
         //timeBuffer = new int[timeBufferSizeInFrames];
         nuanceTolerance     = nuanceWind;
         tangageTolerance    = tangageWind;
@@ -50,7 +54,7 @@ public class Computing : MonoBehaviour
     private bool TestingAccuracy(int[] midiEventCurrent, int[] midiEventRef, int tolerance)
     {
         float midiEventCurrentMean, midiEventRefMean;
-        
+        maxPotentialScore += 1f; 
 
         for ( int i = 0 ; i < timeBufferSizeInFrames ; i++)
         {
@@ -63,20 +67,22 @@ public class Computing : MonoBehaviour
         midiEventCurrentMeanInt = (int)Math.Round( midiEventCurrentMean/timeBufferSizeInFrames );
         midiEventRefMeanInt = (int)Math.Round( midiEventRefMean/timeBufferSizeInFrames );
 
-        if ( Math.Abs( midiEventRefMeanInt - midiEventCurrentMeanInt ) <= tolerance )
+        if ( Math.Abs( midiEventRefMeanInt - midiEventCurrentMeanInt ) <= tolerance)
+        {
+            userScore += 1f; 
             return true;
+        }
         else
             return false;
     }
-    /*
-    public bool Score( float score, float score_max )
+    
+
+    public float GetScore()
     {
-        if( score >= score_max )
-            return true;
-        else
-            return false;
+        return ( userScore / maxPotentialScore ) * 100f;
     }
 
+    /*
     public bool HighScore( float score, float score_max )
     {
         if ( score > score_max )
@@ -88,6 +94,7 @@ public class Computing : MonoBehaviour
 
     public void End()
     {
-
+        userScore = 0f;
+        maxPotentialScore = 0f;
     }
 }
