@@ -14,9 +14,9 @@ public class UserData : MonoBehaviour
     ////////////////MEMBERS////////////////
 
     public string _userName;
-    public bool[] tutorialsFinished = new bool[30];
-    public bool[] exercicesFinished = new bool[30];
-    public float[] highestScores = new float[30];
+    public bool[] tutorialsFinished = new bool[31];
+    public bool[] exercicesFinished = new bool[31];
+    public float[] highestScores = new float[31];
 
 
     ////////////////METHODS////////////////
@@ -30,7 +30,7 @@ public class UserData : MonoBehaviour
             tutorialsFinished[0] = true;
             highestScores[0] = 0;
 
-            for (int i = 0; i < 31; i++)
+            for (int i = 0; i < 30; i++)
             {
                 exercicesFinished[i + 1] = false;
                 tutorialsFinished[i + 1] = false;
@@ -47,7 +47,7 @@ public class UserData : MonoBehaviour
         List<UserData> dataArray = new List<UserData>();
         dataArray = UserDataManager.GetUserDataArray();
 
-        foreach(UserData data in dataArray)
+        foreach (UserData data in dataArray)
         {
             if (data._userName == userName)
             {
@@ -59,5 +59,11 @@ public class UserData : MonoBehaviour
             }
         }
         return false;
+    }
+
+    public void UpdateData()
+    {
+        UserDataManager.UpdateData(this);
+        UserDataManager.Save();
     }
 }

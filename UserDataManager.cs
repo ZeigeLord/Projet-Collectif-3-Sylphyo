@@ -55,8 +55,21 @@ public static class UserDataManager
         {
             if (dataToAdd._userName == checking._userName)
                 break;
-        }    
+        }
         _userDataArray.Add(dataToAdd);
+    }
+
+    public static void UpdateData(UserData data)
+    {
+        foreach (UserData dataToUpdate in _userDataArray)
+        {
+            if (data._userName == dataToUpdate._userName)
+            {
+                dataToUpdate.exercicesFinished = data.exercicesFinished;
+                dataToUpdate.tutorialsFinished = data.tutorialsFinished;
+                dataToUpdate.highestScores = data.highestScores;
+            }
+        }
     }
 
     public static List<UserData> GetUserDataArray()

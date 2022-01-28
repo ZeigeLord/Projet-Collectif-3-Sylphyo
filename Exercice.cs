@@ -28,8 +28,17 @@ public class Exercice : MonoBehaviour
     private bool counting = false;
     private int counTimer;
     private bool timerActive = false;
- 
+
+    //GameObject[] interfaceExercices_objects;
+    //GraphicInterface[] interfaceExercices;
     ////////////////METHODS////////////////
+
+    private void Start()
+    {
+        //interfaceExercices_objects = GameObject.FindGameObjectsWithTag("ExerciceInterface");
+        //interfaceExercices = FindObjectsOfType<GraphicInterface>();
+        
+    }
 
     // GraphicInterface Communication
 
@@ -124,6 +133,7 @@ public class Exercice : MonoBehaviour
         SetFinished();
         SetHighestScore();
         CloseMidiStream();
+        myUserData.UpdateData();
     }
     void Update()
     {
@@ -131,16 +141,12 @@ public class Exercice : MonoBehaviour
         {
             if (timer <= 0)
             {
-                //timer = 0;
-                //countdownText.text = " ";
                 counting = false;
                 Process();
             }
             else
                 timer -= Time.deltaTime;
                 counTimer = (int)timer;
-                //countdownText.text = counTimer.ToString();
-
         }
 
         if (playing)
