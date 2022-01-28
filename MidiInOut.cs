@@ -105,6 +105,11 @@ public class MidiInOut : MonoBehaviour
         return noteOnEvents;
     }
 
+    public double GetTime()
+    {
+        return midiFilePlayer.MPTK_Position;
+    }
+
     public void UpdateFilePitchHistory(int pitch)
     {
         for (int i = filePitchHistory.Length - 1; i > 0; i--)
@@ -156,11 +161,8 @@ public class MidiInOut : MonoBehaviour
     public void ReadEvent(MPTKEvent midiEvent)
     {
         inputMidiEvent = midiEvent;
-        if (midiEvent.Command != MPTKCommand.NoteOff)
-        {
+        if (midiEvent.Command == MPTKCommand.NoteOn)
             UpdatePitchHistory(midiEvent.Value);
-        }
-
         if (StartSending() == true)
             SendEvent(midiEvent);
     }
