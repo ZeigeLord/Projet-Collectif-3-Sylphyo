@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 [Serializable]
 public class UserData : MonoBehaviour
@@ -17,6 +18,9 @@ public class UserData : MonoBehaviour
     public bool[] tutorialsFinished = new bool[31];
     public bool[] exercicesFinished = new bool[31];
     public float[] highestScores = new float[31];
+    public GameObject main_panel, creer_panel, charger_panel;
+    public Text myText;
+    public GameObject inputField;
 
 
     ////////////////METHODS////////////////
@@ -37,6 +41,7 @@ public class UserData : MonoBehaviour
                 highestScores[i + 1] = 0;
             }
             UserDataManager.Add(this);
+            UserDataManager.Save();
             return true;
         }
         return false;
@@ -59,6 +64,36 @@ public class UserData : MonoBehaviour
             }
         }
         return false;
+    }
+
+    public void LoadDataChangePage()
+    {
+        _userName = inputField.GetComponent<Text>().text;
+
+        if (LoadData(_userName))
+        {
+            main_panel.SetActive(true);
+            charger_panel.SetActive(false);
+        }
+        else
+        {
+            main_panel.SetActive(false);
+            myText.GetComponent<Text>().text = "Mauvais nom d'utilisateur";
+        }
+    }
+    public void NewDataChangePage()
+    {
+        _userName = inputField.GetComponent<Text>().text;
+        if (SetNewData(_userName))
+        {
+            main_panel.SetActive(true);
+            creer_panel.SetActive(false);
+        }
+        else
+        {
+            creer_panel.SetActive(false);
+            myText.GetComponent<Text>().text = "Nom d'utilisateur déjà existant";
+        }
     }
 
     public void UpdateData()
