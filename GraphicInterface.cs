@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System;
 using UnityEngine;
 using UnityEngine.UI;
 using MidiPlayerTK;
@@ -52,6 +53,7 @@ public class GraphicInterface : MonoBehaviour
             countdownText.text = countTimer.ToString();
 
         }
+
         //countdownText.color = Color.
 
     }
@@ -69,6 +71,18 @@ public class GraphicInterface : MonoBehaviour
             pitchDisplayPointsFile[i] = GameObject.Instantiate(pitchDisplayPointPrefabFile);
             pitchDisplayPointsFile[i].transform.SetParent(transform);
         }
+
+        MPTKEvent[] noteOnEvents = myMidiInOut.GetNoteOnEvents();
+        double previousNotesLength = 0;
+
+        for (int i = 0; i < noteOnEvents.Length; i++)
+        {
+            previousNotesLength += (noteOnEvents[i].Duration) / 2;
+            pitchDisplayPointsFile[i].transform.position = new Vector3(1200 + Convert.ToSingle(previousNotesLength), 400 + 10 * noteOnEvents[i].Value, 0);
+            pitchDisplayPointsFile[i].GetComponent<RectTransform>().sizeDelta = new Vector2(noteOnEvents[i].Duration*10, 100);
+            previousNotesLength += (noteOnEvents[i].Duration) / 2;
+        }
+
         pitchDisplay = true;
     }
 
@@ -107,18 +121,11 @@ public class GraphicInterface : MonoBehaviour
                     pitchDisplayPoints[i].transform.position = new Vector3(2400 - i * 10, 400 + 10 * myMidiInOut.pitchHistory[i], 0);
                 }
             }
-            if (myMidiInOut.GetTime()>=myMidiInOut.midiFilePlayer.MPTK_PositionFirstNote)
+            
+            for (int i = 0; i <pitchDisplayPointsFile.Length; i++)
             {
-                if (myMidiInOut.GetCurrentEvent().Command != MPTKCommand.NoteOff)
-                {
-                    myMidiInOut.UpdateFilePitchHistory(myMidiInOut.GetCurrentEvent().Value);
-                    for (int i = 0; i < pitchDisplayPointsFile.Length; i++)
-                    {
-                        pitchDisplayPointsFile[i].transform.position = new Vector3(2400 - i * 10, 400 + 10 * myMidiInOut.filePitchHistory[i], 0);
-                    }
-                }
+                pitchDisplayPointsFile[i].transform.Translate(-Time.deltaTime, 0, 0);
             }
-
         }
 
         //Score Scrolling
