@@ -86,10 +86,16 @@ public class GraphicInterface : MonoBehaviour
 
         for (int i = 0; i < noteOnEvents.Length; i++)
         {
-            previousNotesLength += (noteOnEvents[i].Duration) / 2;
+            if (noteOnEvents[i].Duration % 2 != 0)
+                previousNotesLength += (noteOnEvents[i].Duration / 2) + 1;
+            else
+                previousNotesLength += noteOnEvents[i].Duration / 2;
             pitchDisplayPointsFile[i].transform.position = new Vector3(1200 + Convert.ToSingle(previousNotesLength), 400 + 10 * noteOnEvents[i].Value, 0);
             pitchDisplayPointsFile[i].GetComponent<RectTransform>().sizeDelta = new Vector2(noteOnEvents[i].Duration*10, 100);
-            previousNotesLength += (noteOnEvents[i].Duration) / 2;
+            if (noteOnEvents[i].Duration % 2 != 0)
+                previousNotesLength += (noteOnEvents[i].Duration / 2) + 1;
+            else
+                previousNotesLength += noteOnEvents[i].Duration / 2;
         }
 
         pitchDisplay = true;
