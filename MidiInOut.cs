@@ -94,7 +94,7 @@ public class MidiInOut : MonoBehaviour
         return midiFilePlayer.MPTK_ReadMidiEvents();
     }
 
-    public List<MPTKEvent> GetNoteOnEvents()
+    public MPTKEvent[] GetNoteOnEvents()
     {
         List<MPTKEvent> noteOnEvents = new List<MPTKEvent>();
         foreach (MPTKEvent midiEvent in GetAllEvents())
@@ -102,7 +102,7 @@ public class MidiInOut : MonoBehaviour
             if (midiEvent.Command == MPTKCommand.NoteOn)
                 noteOnEvents.Add(midiEvent);
         }
-        return noteOnEvents;
+        return noteOnEvents.ToArray();
     }
 
     public double GetTime()
