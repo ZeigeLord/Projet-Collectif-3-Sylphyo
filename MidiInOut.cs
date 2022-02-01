@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System;
 using UnityEngine;
 using MidiPlayerTK;
 
@@ -36,10 +37,10 @@ public class MidiInOut : MonoBehaviour
                 midiFilePlayer.MPTK_MidiName = "Exo 2 MIDI";
                 break;
             case 3:
-                midiFilePlayer.MPTK_MidiName = "Octave Ex 1";
+                midiFilePlayer.MPTK_MidiName = "Exo 3 MIDI";
                 break;
             case 4:
-                midiFilePlayer.MPTK_MidiName = "Octave Ex 2";
+                midiFilePlayer.MPTK_MidiName = "Octave Ex 1";
                 break;
             case 5:
                 midiFilePlayer.MPTK_MidiName = "Octave Ex3 (chromatique)";
@@ -108,6 +109,72 @@ public class MidiInOut : MonoBehaviour
     public double GetTime()
     {
         return midiFilePlayer.MPTK_Position;
+    }
+
+    public int GetTimeSigNumerator()
+    {
+        return midiFilePlayer.midiLoaded.MPTK_TimeSigNumerator;
+    }
+
+    public int GetTimeSigDenominator()
+    {
+        return midiFilePlayer.midiLoaded.MPTK_TimeSigDenominator;
+    }
+
+    public double GetReferenceDuration()
+    {
+        foreach (MPTKEvent midiEvent in GetNoteOnEvents())
+        {
+            if (midiFilePlayer.MPTK_NoteLength(midiEvent) == MPTKEvent.EnumLength.Quarter)
+            {
+                switch (GetTimeSigDenominator())
+                {
+                    case 1:
+                        return midiEvent.Duration * 2.0;
+                    case 2:
+                        return midiEvent.Duration;
+                    case 3:
+                        if (midiEvent.Duration % 2 != 0)
+                            return (midiEvent.Duration / 2) + 1;
+                        return midiEvent.Duration / 2;
+                    default:
+                        return -1;
+                }
+            }
+            else if (midiFilePlayer.MPTK_NoteLength(midiEvent) == MPTKEvent.EnumLength.Half)
+            {
+                switch (GetTimeSigDenominator())
+                {
+                    case 1:
+                        return midiEvent.Duration;
+                    case 2:
+                        if (midiEvent.Duration % 2 != 0)
+                            return (midiEvent.Duration / 2) + 1;
+                        return midiEvent.Duration / 2;
+                    case 3:
+                        if (midiEvent.Duration % 2 != 0)
+                            return (midiEvent.Duration / 4) + 1;
+                        return midiEvent.Duration / 4;
+                    default:
+                        return -1;
+                }
+            }
+            else if (midiFilePlayer.MPTK_NoteLength(midiEvent) == MPTKEvent.EnumLength.Eighth)
+            {
+                switch (GetTimeSigDenominator())
+                {
+                    case 1:
+                        return midiEvent.Duration * 4.0;
+                    case 2:
+                        return midiEvent.Duration * 2.0;
+                    case 3:
+                        return midiEvent.Duration;
+                    default:
+                        return -1;
+                }
+            }
+        }
+        return -1;
     }
 
     public void UpdateFilePitchHistory(int pitch)

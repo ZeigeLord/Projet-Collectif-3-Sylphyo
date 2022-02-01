@@ -27,6 +27,7 @@ public class GraphicInterface : MonoBehaviour
     private float scoreInitialPosX, scoreInitialPosY;
     private bool pitchDisplay = false;
     private bool scoreScroll = false;
+    private float referenceDuration;
     public Slider sliderIntensite, sliderIntensiteRef, sliderTangage, sliderTangageRef;
     public Text nameNote;
 
@@ -54,12 +55,20 @@ public class GraphicInterface : MonoBehaviour
 
         }
 
+
         //countdownText.color = Color.
 
     }
 
     public void StartPitchDisplay()
     {
+        Debug.Log("Denominator : " + myMidiInOut.GetTimeSigDenominator());
+
+        referenceDuration = Convert.ToSingle(myMidiInOut.GetReferenceDuration());
+        Debug.Log("Reference Duration : " + referenceDuration);
+
+        Debug.Log("Numerator : " + myMidiInOut.GetTimeSigNumerator());
+
         for (int i = 0; i < pitchDisplayPoints.Length; i++)
         {
             pitchDisplayPoints[i] = GameObject.Instantiate(pitchDisplayPointPrefab);
@@ -113,6 +122,7 @@ public class GraphicInterface : MonoBehaviour
 
         if (pitchDisplay)
         {
+            Debug.Log("Current duration :" + myMidiInOut.GetCurrentEvent().Duration);
             if (myMidiInOut.inputMidiEvent != null && myMidiInOut.inputMidiEvent.Command != MPTKCommand.ControlChange && myMidiInOut.inputMidiEvent.Command != MPTKCommand.NoteOff)
             {
                 myMidiInOut.UpdatePitchHistory(myMidiInOut.inputMidiEvent.Value);
@@ -124,8 +134,10 @@ public class GraphicInterface : MonoBehaviour
             
             for (int i = 0; i <pitchDisplayPointsFile.Length; i++)
             {
-                pitchDisplayPointsFile[i].transform.Translate(-Time.deltaTime, 0, 0);
+                pitchDisplayPointsFile[i].transform.Translate(-Time.deltaTime*referenceDuration*(Convert.ToSingle(myMidiInOut.midiFilePlayer.MPTK_Tempo)/60), 0, 0);
             }
+            
+
         }
 
         //Score Scrolling
