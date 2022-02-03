@@ -15,8 +15,9 @@ public class Computing : MonoBehaviour
     // FOR ANALYSIS //
     private float userScore, maxPotentialScore;
     // STATIC //
-    private int nuanceTolerance, tangageTolerance, roulisTolerance, sliderUpTolerance, sliderMidTolerance, sliderLowTolerance;
-    private int timeBufferSizeInFrames = 12;
+    private int nuanceTolerance, tangageTolerance, roulisTolerance, sliderUpTolerance, sliderMidTolerance, sliderLowTolerance; 
+
+    // sliderUpTolerance = MPTKCommande.PitchWheelChange = [0, 16383], valeur centrale 8192 : pas entre 0 et 127
 
     ////////////////METHODS////////////////
 
@@ -36,8 +37,10 @@ public class Computing : MonoBehaviour
 
     public bool AccuracyAnalysis(EventsBufferType midiEventsCurrent, EventsBufferType midiEventsRef)
     {
+        maxPotentialScore += 1f;
 
-        bool pitchTest      = TestingAccuracy(midiEventsCurrent.pitchEvents,        midiEventsRef.pitchEvents,      0);
+        bool pitchTest      = TestingNoteOnAccuracy(midiEventsCurrent.pitchEvents,        midiEventsRef.pitchEvents);
+
         bool nuanceTest     = TestingAccuracy(midiEventsCurrent.nuanceEvents,       midiEventsRef.nuanceEvents,     nuanceTolerance);
         bool tangageTest    = TestingAccuracy(midiEventsCurrent.tangageEvents,      midiEventsRef.tangageEvents,    tangageTolerance);
         bool roulisTest     = TestingAccuracy(midiEventsCurrent.roulisEvents,       midiEventsRef.roulisEvents,     roulisTolerance);
@@ -45,18 +48,40 @@ public class Computing : MonoBehaviour
         bool sliderMidTest  = TestingAccuracy(midiEventsCurrent.sliderMidEvents,    midiEventsRef.sliderMidEvents,  sliderMidTolerance);
         bool sliderLowTest  = TestingAccuracy(midiEventsCurrent.sliderLowEvents,    midiEventsRef.sliderLowEvents,  sliderLowTolerance);
 
+        midiEventsCurrent.ClearBuffers();
+        midiEventsRef.ClearBuffers();
+
         if (pitchTest == true && nuanceTest == true && tangageTest == true && roulisTest == true && sliderUpTest == true && sliderMidTest == true && sliderLowTest == true)
+        {
+            userScore += 1f;
+            return true;
+        }
+        else
+            return false;
+    }
+
+    private bool TestingNoteOnAccuracy(int[] midiEventCurrent, int[] midiEventRef)
+    {
+        int correctFrames = 0;
+        for ( int i = 0; i < midiEventCurrent.Length, i++)
+        {
+            if (midiEventCurrent[i] == midiEventRef[i])
+                correctFrames +=1;
+        }
+
+        if (correctFrames >= 4)
             return true;
         else
             return false;
     }
 
+
     private bool TestingAccuracy(int[] midiEventCurrent, int[] midiEventRef, int tolerance)
     {
-        float midiEventCurrentMean, midiEventRefMean;
-        maxPotentialScore += 1f; 
+        float midiEventCurrentMean = 0;
+        float midiEventRefMean = 0;
 
-        for ( int i = 0 ; i < timeBufferSizeInFrames ; i++)
+        for ( int i = 0 ; i < midiEventCurrent.Length ; i++)
         {
             midiEventCurrentMean += (float)midiEventCurrent[i];
             midiEventRefMean += (float)midiEventRef[i];
@@ -64,12 +89,11 @@ public class Computing : MonoBehaviour
 
         int midiEventCurrentMeanInt, midiEventRefMeanInt;
 
-        midiEventCurrentMeanInt = (int)Math.Round( midiEventCurrentMean/timeBufferSizeInFrames );
-        midiEventRefMeanInt = (int)Math.Round( midiEventRefMean/timeBufferSizeInFrames );
+        midiEventCurrentMeanInt = (int)Math.Round( midiEventCurrentMean /midiEventCurrent.Length );
+        midiEventRefMeanInt = (int)Math.Round( midiEventRefMean /midiEventRef.Length );
 
         if ( Math.Abs( midiEventRefMeanInt - midiEventCurrentMeanInt ) <= tolerance)
         {
-            userScore += 1f; 
             return true;
         }
         else

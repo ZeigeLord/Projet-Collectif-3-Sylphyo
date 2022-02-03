@@ -59,7 +59,7 @@ public class InstrumentData : MonoBehaviour
 
     public int[] MidiToFingering(MPTKEvent midiEventCurrent)
     {
-        int[] fingeringCurrent;
+        int[] fingeringCurrent = new int[9];
 
         if (midiEventCurrent.Command == MPTKCommand.NoteOn)
             for (int i = 0; i < 9; i++)

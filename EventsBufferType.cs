@@ -5,75 +5,86 @@ using MidiPlayerTK;
 
 public class EventsBufferType : MonoBehaviour
 {
-    private int timeBufferSizeInFrames = 12;
+    private int timeBufferSizeInFrames = 6;
     public int[] pitchEvents, nuanceEvents, tangageEvents, roulisEvents, sliderUpEvents, sliderMidEvents, sliderLowEvents;
+    private bool noteBeingPlayed = false;
+
+
+    public EventsBufferType()
+    {
+        pitchEvents     = new int[timeBufferSizeInFrames];
+        nuanceEvents    = new int[timeBufferSizeInFrames];
+        tangageEvents   = new int[timeBufferSizeInFrames];
+        roulisEvents    = new int[timeBufferSizeInFrames];
+        sliderUpEvents  = new int[timeBufferSizeInFrames];
+        sliderMidEvents = new int[timeBufferSizeInFrames];
+        sliderLowEvents = new int[timeBufferSizeInFrames];
+
+        for (int i = 0; i < timeBufferSizeInFrames; i++)
+        {
+            pitchEvents[i] = 0;
+            nuanceEvents[i] = 0;
+            tangageEvents[i] = 0;
+            roulisEvents[i] = 0;
+            sliderUpEvents[i] = 0;
+            sliderMidEvents[i] = 0;
+            sliderLowEvents[i] = 0;
+        }
+    }
 
     public void FillBuffers(MPTKEvent midiEventCurrent)
     {
-        if (midiEventCurrent.Command == MPTKCommand.NoteOn)
-            pitchEvents[0] = midiEventCurrent.Value;
-        /*else
-            pitchEvents[0] = 0;*/
+        /////////// PITCH ///////////
+        ///
+        if (noteBeingPlayed == true)
+            pitchEvents[0] = pitchEvents[1];
 
+        if (midiEventCurrent.Command == MPTKCommand.NoteOn)
+        {
+            pitchEvents[0] = midiEventCurrent.Value;
+            noteBeingPlayed = true;
+        }
+
+        if (midiEventCurrent.Command == MPTKCommand.NoteOff)
+            noteBeingPlayed = false;
+
+        //////// PITCH WHEEL = SLIDER HAUT & SHAKE VIBRATO ////////
+        ///
+        if (midiEventCurrent.Command == MPTKCommand.PitchWheelChange) //Comprend aussi les données envoyées par le shake vibrato
+            sliderUpEvents[0] = midiEventCurrent.Value;
+
+        /////////// CONTROL CHANGES ///////////
+        ///
         if (midiEventCurrent.Command == MPTKCommand.ControlChange)
         {
+            /////////// NUANCE ///////////
             if (midiEventCurrent.Controller == MPTKController.Expression)
             {
                 nuanceEvents[0] = midiEventCurrent.Value;
-                Debug.Log("Valeur de nuance reçue")
+                Debug.Log("Valeur de nuance reçue");
             }
-            else
-                nuanceEvents[0] = 0;
-
+            /////////// TANGAGE ///////////
             if (midiEventCurrent.Controller == MPTKController.SOUND_CTRL6)
             {
                 tangageEvents[0] = midiEventCurrent.Value;
                 Debug.Log("Valeur de tangage reçue");
             }
-            else
-                tangageEvents[0] = 0;
-
+            /////////// ROULIS ///////////
             if (midiEventCurrent.Controller == MPTKController.SOUND_CTRL7)
             {
-                roulisEvents[0] = 0;
+                roulisEvents[0] = midiEventCurrent.Value;
                 Debug.Log("Valeur de roulis reçue");
             }
-            else
-                roulisEvents[0] = 0;
-            /*
-             if (midiEventCurrent.Controller == MPTKController.???)
-                sliderUpEvents[0] = 0;
-            else
-                sliderUpEvents[0] = 0;
-             
-            */
-            if (midiEventCurrent.Controller == MPTKController.MODULATION_WHEEL_LSB)
+            /////////// SLIDER MID ///////////
+            if (midiEventCurrent.Controller == MPTKController.Modulation)
             {
-                sliderMidEvents[0] = 0;
-                Debug.Log("Valeur de slider central reçue")
+                sliderMidEvents[0] = midiEventCurrent.Value;
+                Debug.Log("Valeur de slider central reçue");
             }
-            else
-                sliderMidEvents[0] = 0;
-            /*
-             if (midiEventCurrent.Controller == MPTKController.???)
-                sliderLowEvents[0] = 0;
-            else
-                sliderLowEvents[0] = 0;
-             
-            */
-
-            // Manque SLIDER UP et SLIDER LOW : effect controller?
+            /////////// SLIDER LOW ///////////
+            if (midiEventCurrent.Controller == MPTKController.EFFECTS2_MSB)
+                sliderLowEvents[0] = midiEventCurrent.Value;
         }
-
-        /*else
-        {
-            nuanceEvents[0]     = 0;
-            tangageEvents[0]    = 0;
-            roulisEvents[0]     = 0;
-            sliderUpEvents[0]   = 0;
-            sliderMidEvents[0]  = 0;
-            sliderLowEvents[0]  = 0;
-        }*/
 
     }
 
