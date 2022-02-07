@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using System;
 using UnityEngine;
@@ -20,6 +20,8 @@ public class MidiInOut : MonoBehaviour
     public int[] pitchHistory = new int[500];
     public int[] filePitchHistory = new int[500];
     public int indexDistance;
+    public bool playing = true;
+    public int value;
 
 
     ////////////////METHODS////////////////
@@ -58,10 +60,49 @@ public class MidiInOut : MonoBehaviour
                 midiFilePlayer.MPTK_MidiName = "intervalles Ex 4";
                 break;
             case 10:
-                midiFilePlayer.MPTK_MidiName = "";
+                midiFilePlayer.MPTK_MidiName = "gamme Dm (4 octaves)";
                 break;
             case 11:
-                midiFilePlayer.MPTK_MidiName = "";
+                midiFilePlayer.MPTK_MidiName = "intervalles Ex 1";
+                break;
+            case 12:
+                midiFilePlayer.MPTK_MidiName = "intervalles Ex 2";
+                break;
+            case 13:
+                midiFilePlayer.MPTK_MidiName = "intervallez Ex 3";
+                break;
+            case 14:
+                midiFilePlayer.MPTK_MidiName = "intervalles Ex 4";
+                break;
+            case 15:
+                midiFilePlayer.MPTK_MidiName = "exo1 roulis Classic SineTri";
+                break;
+            case 16:
+                midiFilePlayer.MPTK_MidiName = "Exo_2_roulis_Big_Blue";
+                break;
+            case 17:
+                midiFilePlayer.MPTK_MidiName = "exo_3_roulis_Resozen";
+                break;
+            case 18:
+                midiFilePlayer.MPTK_MidiName = "exercice_simple_bend";
+                break;
+            case 19:
+                midiFilePlayer.MPTK_MidiName = "Exercice Bend";
+                break;
+            case 20:
+                midiFilePlayer.MPTK_MidiName = "Exercice_braveheart";
+                break;
+            case 21:
+                midiFilePlayer.MPTK_MidiName = "Exercice_de_départ";
+                break;
+            case 22:
+                midiFilePlayer.MPTK_MidiName = "ex2";
+                break;
+            case 23:
+                midiFilePlayer.MPTK_MidiName = "ex3";
+                break;
+            case 24:
+                midiFilePlayer.MPTK_MidiName = "Exercices_house_of_chords";
                 break;
             default:
                 break;
@@ -229,7 +270,15 @@ public class MidiInOut : MonoBehaviour
     {
         inputMidiEvent = midiEvent;
         if (midiEvent.Command == MPTKCommand.NoteOn)
+        {
+            playing = true;
+            value = midiEvent.Value;
             UpdatePitchHistory(midiEvent.Value);
+        }
+
+        else if (midiEvent.Command == MPTKCommand.NoteOff && midiEvent.Value == value)
+            playing = false;
+
         if (StartSending() == true)
             SendEvent(midiEvent);
     }

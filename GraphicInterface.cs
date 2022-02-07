@@ -30,6 +30,8 @@ public class GraphicInterface : MonoBehaviour
     private float referenceDuration;
     public Slider sliderIntensite, sliderIntensiteRef, sliderTangage, sliderTangageRef;
     public Text nameNote;
+    private bool playing = false;
+    private int value;
 
     //Curved slider 
     public Image bar, barRef;
@@ -42,7 +44,7 @@ public class GraphicInterface : MonoBehaviour
 
 
     ////////////////METHODS////////////////
-  
+
     public void StartTimerDisplaying(int countTimer)
     {
         if (countTimer <= 0)
@@ -62,12 +64,7 @@ public class GraphicInterface : MonoBehaviour
 
     public void StartPitchDisplay()
     {
-        Debug.Log("Denominator : " + myMidiInOut.GetTimeSigDenominator());
-
         referenceDuration = Convert.ToSingle(myMidiInOut.GetReferenceDuration());
-        Debug.Log("Reference Duration : " + referenceDuration);
-
-        Debug.Log("Numerator : " + myMidiInOut.GetTimeSigNumerator());
 
         for (int i = 0; i < pitchDisplayPoints.Length; i++)
         {
@@ -91,7 +88,7 @@ public class GraphicInterface : MonoBehaviour
             else
                 previousNotesLength += noteOnEvents[i].Duration / 2;
             pitchDisplayPointsFile[i].transform.position = new Vector3(1200 + Convert.ToSingle(previousNotesLength), 400 + 10 * noteOnEvents[i].Value, 0);
-            pitchDisplayPointsFile[i].GetComponent<RectTransform>().sizeDelta = new Vector2(noteOnEvents[i].Duration*10, 100);
+            pitchDisplayPointsFile[i].GetComponent<RectTransform>().sizeDelta = new Vector2(noteOnEvents[i].Duration * 10, 100);
             if (noteOnEvents[i].Duration % 2 != 0)
                 previousNotesLength += (noteOnEvents[i].Duration / 2) + 1;
             else
@@ -122,28 +119,27 @@ public class GraphicInterface : MonoBehaviour
         scoreScroll = true;
     }
 
+
     void Update()
     {
         // Pitch Displaying
 
         if (pitchDisplay)
         {
-            Debug.Log("Current duration :" + myMidiInOut.GetCurrentEvent().Duration);
-            if (myMidiInOut.inputMidiEvent != null && myMidiInOut.inputMidiEvent.Command != MPTKCommand.ControlChange && myMidiInOut.inputMidiEvent.Command != MPTKCommand.NoteOff)
+            if (myMidiInOut.playing)
             {
-                myMidiInOut.UpdatePitchHistory(myMidiInOut.inputMidiEvent.Value);
+                myMidiInOut.UpdatePitchHistory(myMidiInOut.value);
                 for (int i = 0; i < pitchDisplayPoints.Length; i++)
                 {
-                    pitchDisplayPoints[i].transform.position = new Vector3(2400 - i * 10, 400 + 10 * myMidiInOut.pitchHistory[i], 0);
+                    pitchDisplayPoints[i].transform.position = new Vector3(2000 + i * 10, 400 + 10 * myMidiInOut.pitchHistory[i], 0);
                 }
             }
-            
-            for (int i = 0; i <pitchDisplayPointsFile.Length; i++)
-            {
-                pitchDisplayPointsFile[i].transform.Translate(-Time.deltaTime*referenceDuration*(Convert.ToSingle(myMidiInOut.midiFilePlayer.MPTK_Tempo)/60), 0, 0);
-            }
-            
 
+
+            for (int i = 0; i < pitchDisplayPointsFile.Length; i++)
+            {
+                pitchDisplayPointsFile[i].transform.Translate(-Time.deltaTime * referenceDuration * (Convert.ToSingle(myMidiInOut.midiFilePlayer.MPTK_Tempo) / 60), 0, 0);
+            }
         }
 
         //Score Scrolling
@@ -152,7 +148,7 @@ public class GraphicInterface : MonoBehaviour
             if (myMidiInOut.indexDistance < barRelativePositionX.Length)
                 score.transform.position = new Vector3(scoreInitialPosX - barRelativePositionX[myMidiInOut.indexDistance], scoreInitialPosY, 0);
             else scoreScroll = false;
-        
+
         // Sliders updating
         ChangeRealValueRoulis();
         ChangeFileValueRoulis();
@@ -160,7 +156,7 @@ public class GraphicInterface : MonoBehaviour
         ChangeFileValueIntensite();
         ChangeRealValueTangage();
         ChangeFileValueTangage();
-      
+
         NameNote();
     }
 
@@ -249,18 +245,18 @@ public class GraphicInterface : MonoBehaviour
     }
 
     public void ChangeRealValueTangage()
-     {
-         if (myMidiInOut.inputMidiEvent == null)
-         {
-             sliderTangage.value = 0;
-             Debug.Log("Tangage nul");
-         }
-         else if (myMidiInOut.inputMidiEvent.Controller == MPTKController.SOUND_CTRL6)
-         {
-             sliderTangage.value = myMidiInOut.inputMidiEvent.Value;
-             Debug.Log(myMidiInOut.inputMidiEvent.Value);
-         }
-     }
+    {
+        if (myMidiInOut.inputMidiEvent == null)
+        {
+            sliderTangage.value = 0;
+            Debug.Log("Tangage nul");
+        }
+        else if (myMidiInOut.inputMidiEvent.Controller == MPTKController.SOUND_CTRL6)
+        {
+            sliderTangage.value = myMidiInOut.inputMidiEvent.Value;
+            Debug.Log(myMidiInOut.inputMidiEvent.Value);
+        }
+    }
 
     public void ChangeFileValueTangage()
     {
