@@ -13,7 +13,9 @@ public class MidiInOut : MonoBehaviour
 
     ////////////////MEMBERS////////////////
 
+
     public MidiFilePlayer midiFilePlayer;
+    public Doigte myFingering;
     public int indexOutput;
     public MPTKEvent inputMidiEvent = null;
     public MPTKEvent inputMidiFileEvent = null;
@@ -235,6 +237,8 @@ public class MidiInOut : MonoBehaviour
                 UpdateFilePitchHistory(midiEvent.Value);
         }
 
+        
+
         if (midiFilePlayer.MPTK_DeltaTicksPerQuarterNote != 0)
         {
             indexDistance = (int)midiFilePlayer.MPTK_TickCurrent / (3 * midiFilePlayer.MPTK_DeltaTicksPerQuarterNote);
@@ -274,6 +278,7 @@ public class MidiInOut : MonoBehaviour
             playing = true;
             value = midiEvent.Value;
             UpdatePitchHistory(midiEvent.Value);
+            myFingering.ShowFingering(midiEvent.Value);
         }
 
         else if (midiEvent.Command == MPTKCommand.NoteOff && midiEvent.Value == value)

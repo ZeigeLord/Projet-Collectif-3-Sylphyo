@@ -59,7 +59,7 @@ public class Doigte : MonoBehaviour
 
     private void AssignFingeringChart(string instrument)
     {
-        myInstrumentData.AssignFingeringChart(instrument);    
+        myInstrumentData.AssignFingeringChart(instrument);
     }
 
     public void ShowFingering(int midiValue)
@@ -122,7 +122,6 @@ public class Doigte : MonoBehaviour
 
         for (int index = 1; index < 9; index++)
         {
-
             if (fingeringCurrent[index] == 1)
             {
                 tabImageShouldUpdate[index] = true;
