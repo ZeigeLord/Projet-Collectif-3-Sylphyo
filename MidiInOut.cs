@@ -44,25 +44,25 @@ public class MidiInOut : MonoBehaviour
                 midiFilePlayer.MPTK_MidiName = "Exo 3 MIDI";
                 break;
             case 4:
-                midiFilePlayer.MPTK_MidiName = "Octave Ex 1";
+                midiFilePlayer.MPTK_MidiName = "Gamme Db (down-up, up-down)";
                 break;
             case 5:
-                midiFilePlayer.MPTK_MidiName = "Octave Ex3 (chromatique)";
+                midiFilePlayer.MPTK_MidiName = "Gamme G#m (up-down, down-up)";
                 break;
             case 6:
-                midiFilePlayer.MPTK_MidiName = "intervalles Ex 1";
+                midiFilePlayer.MPTK_MidiName = "Octave Ex 1";
                 break;
             case 7:
-                midiFilePlayer.MPTK_MidiName = "intervalles Ex 2";
+                midiFilePlayer.MPTK_MidiName = "Octave Ex 2";
                 break;
             case 8:
-                midiFilePlayer.MPTK_MidiName = "intervallez Ex 3";
+                midiFilePlayer.MPTK_MidiName = "Octave Ex3 (chromatique)";
                 break;
             case 9:
-                midiFilePlayer.MPTK_MidiName = "intervalles Ex 4";
+                midiFilePlayer.MPTK_MidiName = "gamme C (4 octaves)";
                 break;
             case 10:
-                midiFilePlayer.MPTK_MidiName = "gamme Dm (4 octaves)";
+                midiFilePlayer.MPTK_MidiName = "gamme Dm(4 octaves)";
                 break;
             case 11:
                 midiFilePlayer.MPTK_MidiName = "intervalles Ex 1";
@@ -74,37 +74,85 @@ public class MidiInOut : MonoBehaviour
                 midiFilePlayer.MPTK_MidiName = "intervallez Ex 3";
                 break;
             case 14:
-                midiFilePlayer.MPTK_MidiName = "intervalles Ex 4";
+                midiFilePlayer.MPTK_MidiName = "intervalles_Ex_4_v2";
                 break;
             case 15:
-                midiFilePlayer.MPTK_MidiName = "exo1 roulis Classic SineTri";
+                midiFilePlayer.MPTK_MidiName = "Ex 1";
                 break;
             case 16:
-                midiFilePlayer.MPTK_MidiName = "Exo_2_roulis_Big_Blue";
+                midiFilePlayer.MPTK_MidiName = "EX2(2)";
                 break;
             case 17:
-                midiFilePlayer.MPTK_MidiName = "exo_3_roulis_Resozen";
+                midiFilePlayer.MPTK_MidiName = "Exo 3 Shake Vibrato";
                 break;
             case 18:
-                midiFilePlayer.MPTK_MidiName = "exercice_simple_bend";
+                midiFilePlayer.MPTK_MidiName = "Exercice1Nuances";
                 break;
             case 19:
-                midiFilePlayer.MPTK_MidiName = "Exercice Bend";
+                midiFilePlayer.MPTK_MidiName = "Exercice2Nuances";
                 break;
             case 20:
-                midiFilePlayer.MPTK_MidiName = "Exercice_braveheart";
+                midiFilePlayer.MPTK_MidiName = "ExerciceOblivion";
                 break;
             case 21:
-                midiFilePlayer.MPTK_MidiName = "Exercice_de_départ";
+                midiFilePlayer.MPTK_MidiName = "exo1 roulis Classic SineTri";
                 break;
             case 22:
-                midiFilePlayer.MPTK_MidiName = "ex2";
+                midiFilePlayer.MPTK_MidiName = "Exo_2_roulis_Big_Blue";
                 break;
             case 23:
-                midiFilePlayer.MPTK_MidiName = "ex3";
+                midiFilePlayer.MPTK_MidiName = "exo_3_roulis_Resozen";
                 break;
             case 24:
-                midiFilePlayer.MPTK_MidiName = "Exercices_house_of_chords";
+                midiFilePlayer.MPTK_MidiName = "exo4_4_roulis";
+                break;
+            case 25:
+                midiFilePlayer.MPTK_MidiName = "ExerciceBend";
+                break;
+            case 26:
+                midiFilePlayer.MPTK_MidiName = "Braveheart";
+                break;
+            case 27:
+                midiFilePlayer.MPTK_MidiName = "Exercice_de_départ";
+                break;
+            case 28:
+                midiFilePlayer.MPTK_MidiName = "Jazz1";
+                break;
+            case 29:
+                midiFilePlayer.MPTK_MidiName = "Jazz2";
+                break;
+            case 30:
+                midiFilePlayer.MPTK_MidiName = "Jazz3";
+                break;
+            case 31:
+                midiFilePlayer.MPTK_MidiName = "Exercice1Nuances(1)";
+                break;
+            case 32:
+                midiFilePlayer.MPTK_MidiName = "Exercice2Nuances(1)";
+                break;
+            case 33:
+                midiFilePlayer.MPTK_MidiName = "ExerciceOblivion(1)";
+                break;
+            case 34:
+                midiFilePlayer.MPTK_MidiName = "Exo1_1_Classic_SqrSaw_roulis";
+                break;
+            case 35:
+                midiFilePlayer.MPTK_MidiName = "exo2_2_roulis_resozen";
+                break;
+            case 36:
+                midiFilePlayer.MPTK_MidiName = "exo 3 roulis justin whistle";
+                break;
+            case 37:
+                midiFilePlayer.MPTK_MidiName = "exo_4_roulis_mouv";
+                break;
+            case 38:
+                midiFilePlayer.MPTK_MidiName = "Slider pitchbend ex1";
+                break;
+            case 39:
+                midiFilePlayer.MPTK_MidiName = "Braveheart(1)";
+                break;
+            case 40:
+                midiFilePlayer.MPTK_MidiName = "Exercice_depart(1)";
                 break;
             default:
                 break;
@@ -236,8 +284,6 @@ public class MidiInOut : MonoBehaviour
             if (midiEvent.Command == MPTKCommand.NoteOn)
                 UpdateFilePitchHistory(midiEvent.Value);
         }
-
-        
 
         if (midiFilePlayer.MPTK_DeltaTicksPerQuarterNote != 0)
         {
